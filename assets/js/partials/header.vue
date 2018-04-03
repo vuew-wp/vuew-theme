@@ -27,7 +27,8 @@
                                 name: item.type,
                                 params: {
                                     id: item.object_id,
-                                    type_value: item.object
+                                    type_value: item.object,
+                                    taxonomy: item.object
                                 }}">
                                     {{ item.type }} /
                                     {{ item.object }} /

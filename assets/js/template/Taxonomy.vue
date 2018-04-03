@@ -2,19 +2,11 @@
 
     <transition name="slide-fade">
 
-        <div class="row rt-main" v-if="loaded ==='true'">
+        <div class="row rt-main" v-if="loaded">
 
-            <div class="medium-12 small-12 column" >
+            <h2 class="uk-h2"> {{ taxonomy.theTaxName }}</h2>
 
-                <div class="rt-post">
-
-                    <h2 class="rt-post-title"> {{ taxonomy.name }}</h2>
-
-                    <div class="rt-post-content rt-content" v-html="taxonomy.description"></div>
-
-                </div>
-
-            </div>
+            <div class="uk-block" v-html="taxonomy.theTaxDescription"></div>
 
         </div>
 
@@ -33,8 +25,7 @@
         data() {
             return {
                 taxonomy: {},
-                loaded: 'false',
-                taxonomyTitle: ''
+                loaded: 'false'
             };
         },
         methods: {
@@ -43,12 +34,23 @@
                 const vm = this;
                 vm.loaded = 'false';
 
-                vm.$http.get( VuewConfig.rest_root + 'wp/v2/taxonomies/' + vm.$route.params.type_value )
-                    .then( ( res ) => {
+                let base = 'wp/v2/';
 
-                        vm.taxonomy = res.data;
-                        console.log(res.data,);
-                        vm.loaded = 'true';
+                if( 'post_tag' === vm.$route.params.taxonomy ){
+                    base = base + 'tags/';
+                }
+                if( 'category' === vm.$route.params.taxonomy ){
+                    base = base + 'categories/';
+                }
+
+                vm.$http.get( base + vm.$route.params.id )
+                    .then( ( res ) => {
+                        console.log(res.data.name)
+                        vm.taxonomy = {
+                            theTaxName: res.data.name,
+                            theTaxDescription: res.data.description
+                        };
+                        vm.loaded = true;
 
                     } )
                     .catch( ( res ) => {
