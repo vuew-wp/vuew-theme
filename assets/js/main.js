@@ -1,63 +1,47 @@
 /**
  * WebPack Entry main
+ *
+ * @since       0.0.1
  */
-/** LESS */
+
+/**
+ * LESS
+ */
 require('../less/uikit.less');
 require('../less/main.less');
 
+/**
+ * Imports
+ */
 import Vue from 'vue';
-import VueRouter from 'vue-router';
-import Vuex from 'vuex';
-import { HTTP_Proxy as axios } from './utils/HTTP_Proxy';
 
-Vue.prototype.$http = axios;
+/**
+ * Vue Router
+ */
+import router from './utils/router';
 
-Vue.use( Vuex );
-Vue.use( VueRouter );
+/**
+ * Vuex - Store/State
+ */
+import { store } from './store';
 
-import header from './partials/header.vue';
-Vue.component( 'wp-header', header );
+/**
+ * Root App
+ */
+import App from './App.vue';
 
-const App = Vue.extend( {
-    template: '<main><wp-header></wp-header><router-view></router-view></main>'
-} );
+/**
+ * Vuew config
+ * @type {{}}
+ */
+const Vuew = window.Vuew || {};
 
-const Home = { template: '<div>This is Home</div>' }
-const Foo = { template: '<div>This is Foo</div>' }
-const Bar = { template: '<div>This is Bar {{ $route.params.id }}</div>' }
-
-const router = new VueRouter( {
-    mode: 'history',
-    base: '',
-    /*routes: [
-        {
-            path: '/:page?',
-            name: 'page',
-            component: require( './template/home.vue' ).default
-        },
-        {
-            path: '/',
-            redirect: '/'
-        }
-    ]*/
-    routes: [
-        { path: '/', name: 'home', component: require( './template/Home.vue' ).default },
-        { path: '/:id', name: 'post_type', component: require( './template/Page.vue' ).default },
-        { path: '/:taxonomy/:id', name: 'taxonomy', component: require( './template/Taxonomy.vue' ).default  }
-    ]
-} );
-
-//Define vuex store
-const store = new Vuex.Store( {
-    state: {
-        title: ''
-    },
-    mutations: {
-        //Do something cool on state change
-    }
-} );
-
-new App( {
+/**
+ * Instantiate Vue root component
+ * @type {Vue}
+ */
+new Vue({
+    router,
     store,
-    router
-} ).$mount( '#vuew-app' );
+    render: h => h(App),
+}).$mount('#vuew-app');
