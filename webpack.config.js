@@ -105,6 +105,11 @@ module.exports = {
     devtool: '#eval-source-map',
     plugins: [
         new webpack.NamedModulesPlugin(),
+        // Some other plugins
+        new webpack.DefinePlugin({
+            VUEW_DEBUG: JSON.stringify(process.env.VUEW_DEBUG),
+            NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+        }),
         extractLess
     ]
 };
