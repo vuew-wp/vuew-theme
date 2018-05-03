@@ -93,15 +93,12 @@ module.exports = {
         headers: {
             'Access-Control-Allow-Origin': '*',
         },
-        proxy: {
-            '**': {
-                target: "https://sight.dev",
-                "changeOrigin": true,
-                "secure": false
-            }
-        },
+
+        inline: true,
+
         https: true,
-        inline: true
+        cert: fs.readFileSync('./ssl/localhost.cert'),
+        key: fs.readFileSync('./ssl/localhost.key')
     },
     performance: {
         hints: false
