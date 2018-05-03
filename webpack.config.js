@@ -4,7 +4,6 @@ const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
 const isProduction = process.env.NODE_ENV === 'production';
-const appInfo = require('./package.json');
 
 const styleLoaders = {
     css: ["vue-style-loader", "css-loader"],
@@ -30,10 +29,10 @@ if (isProduction) {
 
 
 module.exports = {
-    entry: './assets/js/main.js',
+    entry: './src/main.js',
     output: {
-        path: path.resolve(__dirname, 'assets/dist'),
-        publicPath: 'https://localhost:8080/assets/dist/',
+        path: path.resolve(__dirname, 'dist'),
+        publicPath: 'https://localhost:8080/dist/',
         filename: '[name].js'
     },
     module: {
