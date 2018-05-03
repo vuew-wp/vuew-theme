@@ -2,7 +2,7 @@
   "name": "vuew-theme",
   "description": "A Vue.js Webpack Wordpress project",
   "version": "0.0.1",
-  "author": "Jared Rethman <Jared.Rethman@24.com>",
+  "author": "Jared Rethman <jaredrethman@gmail.com>",
   "private": true,
   "scripts": {
     "dev": "cross-env VUEW_DEBUG=normal NODE_ENV=development webpack-dev-server --https --hot",
