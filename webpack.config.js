@@ -118,9 +118,8 @@ if (isProduction) {
 
     module.exports.devtool = '#source-map';
 
-    //module.exports.plugins.push( extractLess );
+    module.exports.output.publicPath = '/wp-content/themes/vuew/dist/';
 
-    module.exports.output.publicPath = './wp-content/themes/vuew/assets/';
 
     // http://vue-loader.vuejs.org/en/workflow/production.html
     module.exports.plugins = (module.exports.plugins || []).concat([
