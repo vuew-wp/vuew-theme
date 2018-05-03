@@ -29,12 +29,36 @@ function object(){
 		];
 	}
 
-	$initial_object_type[ 'path' ] = parse_url( tf_core_get_requested_uri() )['path'];
+	if( is_front_page() || is_home() ){
+		if(is_home()) {
+			$initial_object_type = [
+				'id'         => 0,
+				'type_value' => false,
+				'rest_base'  => false
+			];
+		}
+		$initial_object_type[ 'type' ] = 'home';
+	}
 
-	$initial_object_type[ 'payload' ] = [
-		'title' => 'This is Boot title',
-		'content' => 'This is Boot content'
-	];
+	if( is_404() ){
+		$initial_object_type = [
+			'id'         => 'four04',
+			'type'       => 404,
+			'rest_base'  => 404
+		];
+	}
+
+	if( is_post_type_archive() ){
+		$initial_object_type = [
+			'id'         => 0,
+			'type'       => 'post_type_archive',
+			'type_value' => $queried_object->name,
+			'rest_base'  => $queried_object->rest_base
+		];
+	}
+
+	$current_uri = parse_url( vw_get_requested_uri() );
+	$initial_object_type[ 'path' ] = isset( $current_uri['path'] ) ? $current_uri['path'] : '/';
 
 	return $initial_object_type;
 }
