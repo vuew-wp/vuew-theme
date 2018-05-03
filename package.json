@@ -1,24 +1,28 @@
 {
   "name": "vuew-theme",
   "description": "A Vue.js Webpack Wordpress project",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "author": "Jared Rethman <Jared.Rethman@24.com>",
   "private": true,
   "scripts": {
-    "dev": "cross-env NODE_ENV=development webpack-dev-server --https --hot",
-    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
+    "dev": "cross-env VUEW_DEBUG=normal NODE_ENV=development webpack-dev-server --https --hot",
+    "dev:verbose": "cross-env VUEW_DEBUG=verbose NODE_ENV=development webpack-dev-server --https --hot",
+    "build": "cross-env VUEW_DEBUG=none NODE_ENV=production webpack --progress --hide-modules"
   },
   "dependencies": {
+    "@wordpress/hooks": "^1.1.6",
     "axios": "^0.16.1",
-    "uikit": "^2.27.0",
+    "uikit": "^3.0.0-beta.42",
     "vue": "^2.5.9",
     "vue-router": "^3.0.1",
+    "vue-select": "^2.4.0",
     "vuex": "^2.2.1"
   },
   "devDependencies": {
     "autoprefixer-loader": "^3.2.0",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
+    "babel-plugin-syntax-dynamic-import": "^6.18.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "babel-preset-stage-2": "^6.24.1",
