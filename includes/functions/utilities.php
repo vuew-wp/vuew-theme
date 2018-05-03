@@ -37,3 +37,16 @@ function vw_list_chunk_pluck( $list, $keys_to_plucks = [] ){
 	return $reduced_fields;
 
 }
+
+function vw_make_bread( $url ){
+	$path = trim( parse_url( $url )['path'], '/' );
+	$path = '' === $path ? '/' : $path;
+	$slug_pieces = explode( '/', $path );
+
+	return $slug_pieces;
+}
+
+function vw_get_requested_uri(){
+	global $wp;
+	return home_url( add_query_arg( array(), $wp->request ) );
+}
