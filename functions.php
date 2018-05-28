@@ -15,7 +15,7 @@ use Vuew\Core\REST;
 use Vuew\functions;
 
 const VER = '0.0.1';
-const ENV = 'dev';
+const ENV = 'prod';
 
 /** URL & Path to theme */
 define( __NAMESPACE__ . '\DIR', trailingslashit( get_template_directory() ) );
