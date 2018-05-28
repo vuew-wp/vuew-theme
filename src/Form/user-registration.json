@@ -1,0 +1,37 @@
+{
+  "$schema" : "",
+  "title" : "User login",
+  "properties" : [
+    {
+      "id" : "userName",
+      "type" : "text",
+      "placeholder" : "Username?"
+    },
+    {
+      "id" : "firstName",
+      "type" : "text",
+      "placeholder" : "Username?"
+    },
+    {
+      "id" : "lastName",
+      "type" : "text",
+      "placeholder" : "Username?"
+    },
+    {
+      "id" : "email",
+      "type" : "email",
+      "placeholder" : "Username?"
+    },
+    {
+      "id" : "password",
+      "type" : "password",
+      "placeholder" : "Username?"
+    },
+    {
+      "id" : "passwordTwo",
+      "type" : "password",
+      "match" : "password",
+      "placeholder" : "Username?"
+    }
+  ]
+}

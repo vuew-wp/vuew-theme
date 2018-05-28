@@ -1,0 +1,27 @@
+{
+  "password": {
+    "default": "",
+    "minChars": 8,
+    "validate_callback": "validatePassword"
+  },
+  "text": {
+    "default": "",
+    "validate_callback": "validateText"
+  },
+  "number": {
+    "default": "",
+    "validate_callback": "validateNumber"
+  },
+  "email": {
+    "default": "",
+    "validate_callback": "validateEmail"
+  },
+  "checkbox": {
+    "default": "",
+    "validate_callback": "validateCheckbox"
+  },
+  "select": {
+    "default": "",
+    "validate_callback": "validateSelect"
+  }
+}
