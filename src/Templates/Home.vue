@@ -1,5 +1,5 @@
 <template>
-    <div v-if="queryData">
+    <div class="uk-container">
         <h1>HOME</h1>
         <h1>{{ queryData.title }}</h1>
         <div class="uk-block" v-html="queryData.content"></div>

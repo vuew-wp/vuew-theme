@@ -1,5 +1,5 @@
 <template>
-    <div class="uk-grid uk-grid-large">
+    <div class="uk-container">
         <h1>404</h1>
         <div class="uk-width-1-1">URL: <strong>{{siteUrl + queryData.path}}</strong>, could not be resolved.</div>
         <Search/>
