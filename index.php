@@ -7,9 +7,12 @@
     <link rel="pingback" href="<?php bloginfo( 'pingback_url' ); ?>">
 
 	<?php wp_head(); ?>
+
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet">
+
 </head>
 
-<body <?php body_class() ?> >
+<body <?php body_class(); ?>>
 
 <noscript>
     <div id="content" class="site-content">
@@ -41,10 +44,17 @@
     </div>
 </noscript>
 <!-- APP - START -->
-<div id="vuew-app"></div>
+<div id="vuew-app"><h1>LOADING</h1></div>
 <!-- APP - END -->
 
 <?php wp_footer(); ?>
+
+<script>
+    wp.hooks.addFilter( 'myTestFilter', function( query ){
+        //query.payload.collection = 'poo';
+        return query;
+    } );
+</script>
 
 </body>
 </html>
