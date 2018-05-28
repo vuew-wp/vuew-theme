@@ -65,8 +65,6 @@ const actions = {
         store.dispatch( 'notify/clearNotification', null, { root: true } );
         store.dispatch( 'notify/addNotification',
             '<strong>> Navigation started</strong>', { root: true } );
-        store.dispatch( 'notify/addNotification',
-            '<strong>> Component</strong> -> ' + queryVars.component, { root: true } );
 
         /** Init request state */
         store.commit("UPDATE_REQUEST_STATE", {
@@ -82,10 +80,7 @@ const actions = {
 
         if( queryVars.type === 404 ){
             /** Add route query to cache */
-            store.dispatch( 'cache/add404', queryVars, { root: true } );
-            store.commit( "UPDATE_REQUEST_STATE", {loaded: true, pending: false });
-            store.dispatch( 'notify/addNotification',
-                '<strong>> 404, no request made</strong>', { root: true } );
+            store.dispatch( 'force404', queryVars );
             return;
         }
 
@@ -105,6 +100,9 @@ const actions = {
             return;
 
         }
+
+        store.dispatch( 'notify/addNotification',
+            '<strong>> Component</strong> -> ' + queryVars.component, { root: true } );
 
         /** Bail if post cache exists */
         if( store.rootGetters[ 'cache/postCacheExists' ](path) ){
@@ -145,10 +143,20 @@ const actions = {
             })
             .catch(e => {
                 /** Add route query to cache */
+                store.dispatch( 'force404', queryVars );
+            });
+    },
+
+    force404: ( store, queryVars ) => {
+        HTTP.get( 'VUEW_QUERY_FORCE_404?path=' + encodeURI( queryVars.path ) )
+            .catch(e => {
                 store.dispatch( 'cache/add404', queryVars, { root: true } );
-                store.commit( "UPDATE_REQUEST_STATE", {loaded: true, pending: false });
+                store.commit( "UPDATE_REQUEST_STATE", {
+                    loaded: true,
+                    pending: false
+                });
                 store.dispatch( 'notify/addNotification',
-                    '<strong>> 404, HTTP Request failed.</strong>' + e, { root: true } );
+                    '<strong>> ERROR: Server response</strong> -> ' + e, { root: true } );
             });
     },
 
@@ -230,8 +238,7 @@ const getters = {
     getCurrentQueriedObject: ( state, getters, rootState, rootGetters ) => {
 
         const queries = rootGetters['cache/getQueriesCache'];
-        const currentPath = rootGetters['getCurrentPath'];
-
+        let currentPath = rootGetters['getCurrentPath'];
 
         if( currentPath && queries.hasOwnProperty( currentPath ) ){
             return queries[ currentPath ];
