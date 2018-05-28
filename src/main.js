@@ -7,10 +7,13 @@
 /**
  * LESS
  */
-if( NODE_ENV === 'development' ) {
-    require('../assets/less/uikit.less');
-    require('../assets/less/main.less');
-}
+require('../assets/less/main.less');
+
+
+/**
+ * Imports
+ */
+import Vue from 'vue';
 
 /**
  * WP-JS-Hooks
