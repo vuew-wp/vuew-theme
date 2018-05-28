@@ -1,0 +1,103 @@
+@triangle-size: 150px;
+@triange-speed: 2000ms;
+@triangle-speed-basis: 2000ms / 5;
+
+@keyframes grow-and-fade {
+  0% {
+    opacity: 0;
+    transform: scale(0.1) translatez(0);
+  }
+
+  40% {
+    opacity: 1;
+  }
+
+  60% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(2) translatez(0);
+  }
+}
+
+@keyframes pulsing-fade {
+  0% {
+    opacity: 0;
+  }
+
+  20% {
+    opacity: 0;
+  }
+
+  40% {
+    opacity: 0.8;
+  }
+
+  60% {
+    opacity: 0;
+  }
+}
+
+.triangle {
+  animation: grow-and-fade @triange-speed linear infinite;
+  height: @triangle-size;
+  left: 0;
+  opacity: 0;
+  width: @triangle-size;
+  position: absolute;
+  top: 0%;
+  transform: rotate(90deg);
+  transform-origin: 50% 60%;
+  will-change: opacity, transform;
+
+  &-wrapper {
+    height: @triangle-size;
+    position: relative;
+    width: @triangle-size;
+  }
+
+  &-loading {
+    animation: pulsing-fade 6000ms ease infinite;
+    color: @vw-color-lightest;
+    font-size: 18px;
+    letter-spacing: 4px;
+    font-weight: 300;
+    left: 50%;
+    top: 0;
+    width: 100%;
+    opacity: 0;
+    position: absolute;
+    text-align: center;
+    transform: translate3d(-50%, -50%, 0);
+    text-transform: uppercase;
+  }
+
+  &-svg {
+    margin-top: -20px;
+    opacity: 0.5;
+    overflow: visible;
+    transform: rotate(180deg);
+    transform-origin: 50% 110px;
+  }
+
+  &-polygon {
+    stroke-width: 5px;
+  }
+
+  &-1 { animation-delay: @triangle-speed-basis * 0; }
+  &-1 &-polygon { stroke: hotpink; }
+
+  &-2 { animation-delay: @triangle-speed-basis * 1; }
+  &-2 &-polygon { stroke: aqua; }
+
+  &-3 { animation-delay: @triangle-speed-basis * 2; }
+  &-3 &-polygon { stroke: cornflowerblue; }
+
+  &-4 { animation-delay: @triangle-speed-basis * 3; }
+  &-4 &-polygon { stroke: yellow; }
+
+  &-5 { animation-delay: @triangle-speed-basis * 4; }
+  &-5 &-polygon { stroke: white; }
+}
