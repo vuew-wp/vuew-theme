@@ -1,0 +1,39 @@
+html{
+}
+body{
+  background-color: @vw-color-lighter;
+}
+/*a,
+p,
+ul,
+li,
+ol,
+blockquote{
+  font-family: 'Oranienbaum', serif;
+}*/
+a,
+p,
+ul,
+li,
+ol,
+blockquote,
+h1,
+h2,
+h3,
+h4,
+h5{
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  hyphens: auto;
+}
+a{
+  transition: color 0.3s, background-color 0.3s;
+  text-decoration: none;
+
+  &:hover{
+    text-decoration: none;
+  }
+}
