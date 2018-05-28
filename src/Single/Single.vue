@@ -1,8 +1,13 @@
 <template>
     <div>
-        <Attachment class="uk-position-relative" :src="postData.featured_media.large" :use-fallback="false" :type="'background'" style="height:300px; width:100%;"></Attachment>
-        <h1 v-html="postData.title"></h1>
-        <div class="uk-block" v-html="postData.content"></div>
+        <figure class="vw-featured-image">
+            <Attachment class="uk-position-relative" :src="postData.featured_media.large" :use-fallback="false" :type="'background'" style="height:300px; width:100%;">
+                <h1 class="uk-container uk-position-center"><span v-html="postData.title"></span></h1>
+            </Attachment>
+        </figure>
+        <div class="uk-container uk-section">
+            <div class="uk-block" v-html="postData.content"></div>
+        </div>
     </div>
 </template>
 
