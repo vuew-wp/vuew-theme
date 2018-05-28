@@ -39,7 +39,7 @@ REST::create();
 function boot() {
 	/** @const array \Vuew\REST_BASES */
 	define( __NAMESPACE__ . '\REST_BASES', functions\rest_api\map_bases() );
-	Menu::create();
+	Menu::init();
 }
 
 add_action( 'init', __NAMESPACE__ . '\boot' );
