@@ -1,0 +1,26 @@
+.vw-article{
+  a{
+    background-color: #ffffff;
+    text-decoration: none;
+
+  }
+  &:hover {
+    a {
+      background-color: @vw-color-lightest;
+      h3 {
+        color: @vw-color-primary;
+      }
+    }
+  }
+  .uk-background-cover{
+    border-bottom: 1px solid @vw-color-lighter;
+  }
+}
+
+//
+// Animation
+//
+.vw-flicker-loading-post{
+  min-height: 450px;
+  -webkit-animation: vw-post-loading 8s infinite alternate;
+}
