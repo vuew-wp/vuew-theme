@@ -85,6 +85,38 @@
             },
             notify(){
                 return this.$store.getters[ 'notify/getNotifications' ];
+            },
+            bodyClass(){
+
+                let cssClasses = '';
+                const current = this.query;
+
+                switch( current.component ){
+                    case 'post_type_archive' :
+                        cssClasses += 'archive post-type-archive post-type-archive-' + current.type_value;
+                        break;
+                    case 'taxonomy' :
+                        if( 'post_tag' === current.type_value ) {
+                            cssClasses += 'tag '
+                        }
+                        if( 'category' === current.type_value ){
+                            cssClasses += 'category '
+                        }
+                        cssClasses += 'archive tax-' + current.type_value + ' term-' + current.payload.slug + ' term-' + current.id;
+                        break;
+                    case 'single' :
+                        //@todo post template
+                        cssClasses += 'post-template-default single single-' + current.type_value + ' postid-' + current.id + ' single-format-standard';
+                        break;
+                    case 'home' :
+                        cssClasses += 'home blog';
+                        break;
+                    case 'four04' :
+                        cssClasses += 'error404';
+                        break;
+                }
+
+                return cssClasses;
             }
         }
     }
