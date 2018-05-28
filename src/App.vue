@@ -1,23 +1,38 @@
 <template>
-    <main>
-        <Header></Header>
-        <p v-html="notify" class="uk-text-small"></p>
-        <TemplateProxy v-if="isLoaded" :query="query"></TemplateProxy>
-        <h1 v-else>Loading...</h1>
+    <main :class="[ bodyClass, isLoaded ? 'vw-component-loaded' : 'vw-component-pending' ]">
+        <vw-header></vw-header>
+        <p v-if="false" v-html="notify" class="uk-text-small"></p>
+        <transition name="vw-fade-transition">
+            <vw-template v-if="!pending" :query="query"></vw-template>
+        </transition>
+        <pre-loader v-show="!isLoaded"></pre-loader>
+        <vw-footer></vw-footer>
+        <off-canvas></off-canvas>
     </main>
 </template>
 <script>
 
-    import Header from './Partials/Header.vue';
-    import TemplateProxy from './Proxy/Template.vue';
+    import VwHeader from './Partials/Header.vue';
+    import VwFooter from './Partials/Footer.vue';
+    import VwTemplate from './Proxy/Template.vue';
 
     import { helpers } from './common/helpers';
+    import PreLoader from './Proxy/PreLoader';
+    import OffCanvas from "./Partials/OffCanvas/OffCanvas";
 
     export default {
 
         components:{
-            Header,
-            TemplateProxy
+            OffCanvas,
+            PreLoader,
+            VwHeader,
+            VwFooter,
+            VwTemplate
+        },
+        data(){
+            return {
+                pending: true
+            }
         },
         mounted: function(){
             this.dispatchNavigation( this.$store, Vuew.config.boot );
