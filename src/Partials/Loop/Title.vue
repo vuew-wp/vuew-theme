@@ -1,5 +1,5 @@
 <template>
-    <h3 v-html="theTitle" class="uk-card-title"></h3>
+    <h3 v-html="theTitle"></h3>
 </template>
 
 <script>
