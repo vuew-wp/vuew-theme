@@ -52,6 +52,16 @@
                     rest_base: 'home' === component && Vuew.config.pageOnFront > 0 ? 'pages': params.rest_base
                 });
 
+            },
+            query:function(){
+                const vm = this;
+                vm.pending = true;
+                if( vm.$store.getters[ 'query/isLoaded' ] ){
+                    console.log("QUERY CHANGED");
+                    setTimeout(function () {
+                        vm.pending = false;
+                    }, 400 )
+                }
             }
         },
         methods: {
