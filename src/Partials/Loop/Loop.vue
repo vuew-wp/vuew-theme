@@ -1,32 +1,32 @@
 <template>
-    <div class="uk-grid">
+    <div  class="uk-grid uk-grid-small uk-grid-match">
 
-        <p class="uk-width-1-1">{{queryData.post_count}}/{{queryData.found_posts}}</p>
+        <Post v-if="index <= offset" v-for="( post, index ) in getPosts" :key="post.path" :post="post" :columns="columns"/>
 
-        <Post v-if="index <= offset" v-for="( post, index ) in getPosts" :key="post.path" :post="post"></Post>
-
-        <Post v-if="index > offset" style="background:#777777" v-for="( newPost, index ) in getPosts" :key="newPost.path" :post="newPost"></Post>
-
-        <div class="uk-width-1-1">
-            <button v-if="queryData.post_count < queryData.found_posts" @click="loadPosts" class="uk-button uk-button-primary">{{ isPending ? 'Pending...' : 'Load More' }}</button>
-        </div>
+        <Pagination class="uk-grid uk-grid-small uk-grid-match" :posts="getPosts" type="LoadMore" :post-count="queryData.post_count" :found-posts="queryData.found_posts" :columns="columns" :offset="offset" elem-type="Post"/>
 
     </div>
 </template>
 
 <script>
 
-    import Pagination from "../Pagination/Pagination";
     import Post from "./Post";
+
+    import Pagination from "../Pagination/Pagination";
 
     export default {
         data(){
             return {
-                offset: Vuew.config.query.ppp - 1
+                /**
+                 * @todo use column count variable here
+                 * Returns the next highest multiple of column count
+                 */
+                columns: Vuew.config.layout.archives[ this.archiveType ].columns
             }
         },
         props: [
-            'queryData'
+            'queryData',
+            'archiveType'
         ],
         components:{
             Pagination,
@@ -47,6 +47,9 @@
             },
             isLoaded(){
                 return this.$store.getters[ 'query/isLoaded' ];
+            },
+            offset:function(){
+                return ( Math.ceil( Vuew.config.query.ppp / this.columns ) * this.columns ) - 1;
             }
         },
         methods: {
