@@ -325,5 +325,6 @@ class REST extends Factory {
 
 	public static function user_register( \WP_REST_Request $request ) {
 		$params       = $request->get_params();
+		return $params;
 	}
 }
