@@ -1,3 +1,4 @@
-export const state = {
-    currentPath : ''
+export default {
+    currentPath : '',
+    offCanvasOpen: false
 };
