@@ -12,28 +12,15 @@ use Vuew\functions;
  * @package Vuew\Core
  *
  * @todo        add way to filter paths
+ * @todo        Replace array_map with standard loop
  */
 class Menu extends Factory {
-
-	/** @var array $routes */
-	static $routes = [];
-
-	/** @var bool|int $page_on_front */
-	static $page_on_front = false;
-
-	/**
-	 * Menu constructor.
-	 */
-	function __construct() {
-		self::$page_on_front = (int) get_option( 'page_on_front' );
-		static::register();
-	}
 
 	/**
 	 * Create WP Nav Menus
 	 * @since   0.0.1
 	 */
-	public static function register() {
+	public static function init() {
 		\register_nav_menus(
 			[
 				'primary_menu' => __( 'Primary Menu' ),
@@ -70,6 +57,8 @@ class Menu extends Factory {
 		/** @var array $found_menus */
 		$found_menus = $routes = [];
 
+		$page_on_front = (int) get_option( 'page_on_front' );
+
 		foreach ( $vuew_menus as $vuew_menu ) {
 			if ( isset( $menu_locations[ $vuew_menu ] ) ) {
 
@@ -77,10 +66,7 @@ class Menu extends Factory {
 					continue;
 				}
 
-				//var_dump(\Vuew\REST_BASES);
-
-				/** Cast all object_id as int and add slug */
-				array_map( function ( $v ) {
+				array_map( function ( $v ) use ( $page_on_front ) {
 
 					/** Unless url is '/' lets remove the last slash from the URL. */
 					$v->url = '/' !== $v->url ? untrailingslashit( $v->url ) : '/';
@@ -105,8 +91,8 @@ class Menu extends Factory {
 
 						if ( $v->url === '/' || $v->url === $site_url ) {
 							$v->type = 'home';
-							if ( self::$page_on_front > 0 ) {
-								$v->id         = self::$page_on_front;
+							if ( $page_on_front > 0 ) {
+								$v->id         = $page_on_front;
 								$v->type_value = 'post_type';
 								$v->rest_base  = 'pages';
 							} else {
@@ -173,30 +159,8 @@ class Menu extends Factory {
 						$v->id        = 0;
 						$v->rest_base = \Vuew\REST_BASES['post_type'][ $v->object ];
 					}
-					if ( $v->type !== 'external' ) {
-						static::$routes[ $v->type ][] = static::create_route( $slug_pieces );
-					}
 
 				}, $nav_object );
-
-				/**
-				 * @todo make less dynamic
-				 */
-
-				foreach ( static::$routes as $type => $object_type ) {
-
-					$max    = '';
-					$maxlen = 0;
-
-					foreach ( $object_type as $object ) {
-						$len = strlen( $object );
-						if ( $len > $maxlen ) {
-							$maxlen = $len;
-							$max    = $object;
-						}
-					}
-					$routes[ $type ] = $max;
-				}
 
 				$found_menus[ $vuew_menu ] = \vw_list_chunk_pluck( $nav_object, $fields_to_get );
 				$found_menus[ $vuew_menu ] = $hierarchical ? static::tree( $found_menus[ $vuew_menu ] ) : $found_menus[ $vuew_menu ];
@@ -204,40 +168,33 @@ class Menu extends Factory {
 
 		}
 
-		//var_dump( $found_menus);
-
-		return [ 'menus' => $found_menus, 'paths' => $routes ];
+		return [ 'menus' => $found_menus, 'paths' => static::get_routes() ];
 	}
 
-	/**
-	 * @param $slug_pieces
-	 * @param $type
-	 *
-	 * @return string
-	 */
-	protected static function create_route( $slug_pieces ) {
+	protected static function get_routes(){
+		/** @var array $depths */
+		$depths = apply_filters( 'Vuew\\Routes', [
+			'home'              => 0,
+			'taxonomy'          => 6,
+			'post_type'         => 6,
+			'post_type_archive' => 2,
+		]);
+		$routes = [];
+		foreach( $depths as $type => $depth ){
 
-		//We're home
-		if ( '' === $slug_pieces[0] ) {
-			return '/';
-		}
-
-		$route = '';
-
-		unset( $slug_pieces[0] );
-
-		$count = count( $slug_pieces );
-
-		foreach ( $slug_pieces as $k => $piece ) {
-			if ( -- $count <= 0 ) {
-				$route .= 'slug' . $k . '?';
-				break;
-			} else {
-				$route .= 'slug' . $k . '?/:';
+			$depths[ $type ] = apply_filters( 'Vuew\\Route\\Depth\\' . $type, $depth );
+			if( $depths[ $type ] === 0 ) {
+				$routes[ $type ] = '/';
+				continue;
 			}
-		}
+			$route = '/:base';
+			for( $i = 1, $m = $depths[ $type ]; $i <= $m; $i++ ){
+				$route .= '/:slug' . $i . '?';
+			}
+			$routes[ $type ] = $route;
 
-		return $route === '' ? '/:base' : '/:base/:' . $route;
+		}
+		return $routes;
 	}
 
 	/**
