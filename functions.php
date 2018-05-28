@@ -82,6 +82,20 @@ function vuew_assets() {
 			],
 			'query'       => [
 				'ppp' => (int) get_query_var( 'posts_per_page', 6 )
+			],
+			'layout' => [
+				'archives' => [
+					'home'              => [
+						'columns' => 3,
+						'type' => 'post-vuew'
+					],
+					'post_type_archive' => [
+						'columns' => 2
+					],
+					'taxonomy'          => [
+						'columns' => 4
+					]
+				]
 			]
 		] )
 	];
