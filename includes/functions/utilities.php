@@ -50,3 +50,20 @@ function vw_get_requested_uri(){
 	global $wp;
 	return home_url( add_query_arg( array(), $wp->request ) );
 }
+
+function always_excerpt( $content, $excerpt = '' ){
+	if( '' !== $excerpt ) {
+		return nl2br( $excerpt );
+	}
+	$text = strip_shortcodes( $content );
+	//$text = apply_filters( 'the_content', $text );
+	$text = str_replace(']]>', ']]&gt;', $text);
+
+	$excerpt_length = apply_filters( 'excerpt_length', 20 );
+	$excerpt_more = apply_filters( 'excerpt_more', '...' );
+
+	$text = wp_trim_words( $text, $excerpt_length, $excerpt_more );
+	return nl2br( $text );
+}
+
+remove_filter ('the_excerpt', 'wpautop');
