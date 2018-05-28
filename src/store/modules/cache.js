@@ -19,7 +19,8 @@ const state = {
     excludeIds   : [],
     queriesCache : {},
     pathsCache   : [],
-    postsCache   : {}
+    postsCache   : {},
+    imagePaths   : [],
 };
 
 /**
@@ -41,9 +42,6 @@ const mutations = {
      */
     CACHE_ADD_POST: (state, post) => {
         Vue.set(state.postsCache, post.route.path, post);
-        /*post.path = post.route.path;
-        post.rest_base = post.route.rest_base;
-        post.type_value = post.route.type_value;*/
         console.log('CACHE_ADD_POST', state.postsCache);
     },
     /**
@@ -74,11 +72,20 @@ const mutations = {
         state.queriesCache[ args.path ].payload.post_count += args.posts.length;
         console.log('CACHE_UPDATE_POST_LIST',state.queriesCache[ args.path ].payload.post_paths);
     },
+
     CACHE_ADD_404: (state, query) => {
         //Update queryIndex
         Vue.set( state.queriesCache, query.path, query );
         console.log(state.queriesCache);
     },
+
+    CACHE_ADD_IMAGE_PATH: (state, image) => {
+        //Cache image path
+        console.log( state.imagePaths );
+        state.imagePaths.push( image );
+    },
+
+
 };
 
 /**
@@ -179,6 +186,10 @@ const actions = {
 
     add404: ( store, queryVars ) => {
         store.commit( "CACHE_ADD_404", queryVars );
+    },
+
+    addImagePath: ( store, image ) => {
+        store.commit( "CACHE_ADD_IMAGE_PATH", image );
     }
 };
 
@@ -239,8 +250,18 @@ const getters = {
     getQueriesCache: ( state ) => {
         return state.queriesCache;
     },
+
     getPostsCache: ( state ) => {
         return state.postsCache;
+    },
+
+    imageCached: ( state ) => ( imagePath ) => {
+        for( let i = 0, m = state.imagePaths.length; i < m; i++ ){
+            if( state.imagePaths[ i ].src === imagePath ){
+                return state.imagePaths[ i ];
+            }
+        }
+        return false;
     }
 };
 
