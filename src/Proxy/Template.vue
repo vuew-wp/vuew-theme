@@ -1,42 +1,38 @@
 <template>
-    <section v-if="query">
-        <code style="max-height: 250px; overflow: auto; display: block">
-            <pre>{{ applyFilters('myTestFilter', queryData )}}</pre>
-        </code>
-        <component :is="query.component" :query-data="applyFilters( 'myTestFilter', queryData )"></component>
-    </section>
+    <component :is="query.component" :query-data="queryData" class="vw-site-container"></component>
 </template>
 
 <script>
 
-    import Loading from '../Partials/Loading.vue';
-    import Four04 from '../Templates/404.vue';
+    import PreLoader from '../Proxy/PreLoader';
+    import Four04 from '../Templates/404';
 
     const LoadingErrorComponents = {
-        loading: Loading,
         error: Four04,
+        loading: PreLoader
     };
 
     export default {
         components: {
             taxonomy:   () => ({
-                component: import( '../Archive/Taxonomy.vue' ),
+                component: import( /* webpackChunkName: "taxonomy" */ '../Archive/Taxonomy.vue' ),
                 ...LoadingErrorComponents
             }),
             post_type_archive:  () => ({
-                component: import( '../Archive/PostType.vue' ),
+                component: import( /* webpackChunkName: "post_type_archive" */ '../Archive/PostType.vue' ),
                 ...LoadingErrorComponents
             }),
             single:     () => ({
-                component: import( '../Single/Single.vue' ),
+                component: import( /* webpackChunkName: "single" */ '../Single/Single.vue' ),
                 ...LoadingErrorComponents
             }),
             home:       () => ({
                 component: parseInt( Vuew.config.pageOnFront ) > 0 ?
-                    import( '../Templates/Home.vue' ) :
-                    import( '../Templates/Index.vue' ),
+                    import( /* webpackChunkName: "home" */ '../Templates/Home.vue' ) :
+                    import( /* webpackChunkName: "index" */ '../Templates/Index.vue' ),
                 ...LoadingErrorComponents
             }),
+            PreLoader,
             four04: Four04
         },
         props: [
@@ -58,3 +54,9 @@
     };
 
 </script>
+<style lang="less">
+    @import "../../assets/less/base/vars";
+    .vw-site-container{
+        margin-top: @vw-header-height;
+    }
+</style>
