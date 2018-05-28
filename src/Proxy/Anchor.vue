@@ -1,6 +1,6 @@
 <template>
-    <router-link v-if="menu.type !== 'external'" tag="li" :to="setMenuItemParams" :class="{ 'uk-parent' : menu.children }" exact>
-        <a>{{menu.title}} <span v-if="menu.type === 404" class="uk-text-danger uk-float-right">(404)</span> </a>
+    <router-link v-if="menu.type !== 'external'" tag="li" :to="setMenuItemParams" exact>
+        <a v-html="menu.title"></a> <span v-if="menu.type === 404" class="uk-text-danger uk-float-right">(404)</span>
         <slot></slot>
     </router-link>
     <li v-else :class="{ 'uk-parent' : menu.children }">
