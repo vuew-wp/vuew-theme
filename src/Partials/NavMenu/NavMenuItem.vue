@@ -1,12 +1,10 @@
 <template>
 
-    <anchor :menu="menu">
+    <anchor :menu="menu" :class="{ 'uk-parent' : menu.children }">
 
-        <div class="uk-navbar-dropdown" v-if="menu.children">
-            <ul class="uk-nav uk-navbar-dropdown-nav">
-                <nav-menu-item class="item" v-for="item in menu.children" :key="item.path" :menu="item"></nav-menu-item>
-            </ul>
-        </div>
+        <ul v-if="menu.children">
+            <nav-menu-item class="item" v-for="item in menu.children" :key="item.path" :menu="item"></nav-menu-item>
+        </ul>
 
     </anchor>
 

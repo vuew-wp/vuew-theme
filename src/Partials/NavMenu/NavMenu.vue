@@ -1,7 +1,7 @@
 <template>
-    <nav class="uk-navbar-container" ref="UKNavbar">
-        <div class="uk-navbar-left" :class="{ 'vw-navbar-disabled': isPending }">
-            <ul class="uk-navbar-nav uk-nav-primary">
+    <nav>
+        <div :class="{ 'vw-navbar-disabled': isPending }">
+            <ul class="tree">
                 <nav-menu-item :key="menu.path" v-for="item in menu" :menu="item"></nav-menu-item>
             </ul>
         </div>
@@ -13,25 +13,23 @@
 
 <script>
 
-    import UIkit from 'uikit';
-
     import NavMenuItem from './NavMenuItem.vue';
 
     export default {
         props: [
             'menu'
         ],
-        components:{
+        components: {
             'nav-menu-item': NavMenuItem
         },
-        mounted:function(){
-            UIkit.navbar(this.$refs.UKNavbar);
-        },
-        computed:{
-            isPending: function(){
+        computed: {
+            isPending: function () {
                 return this.$store.getters['query/isPending'];
             }
         }
     };
 
 </script>
+<style lang="less">
+   // @import "../../../assets/less/partials/off-canvas";
+</style>
