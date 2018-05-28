@@ -1,0 +1,14 @@
+@-webkit-keyframes vw-post-loading {
+  0% {background-color: @vw-color-lighter;}
+  30% {background-color: @vw-color-lightest;}
+  100% {background-color: @vw-color-lighter;}
+}
+
+.vw-fade-transition-enter-active,
+.vw-fade-transition-leave-active {
+  transition: opacity 0.4s !important;
+}
+.vw-fade-transition-enter,
+.vw-fade-transition-leave-to{
+  opacity: 0 !important;
+}
