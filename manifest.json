@@ -1,0 +1,20 @@
+{
+  "short_name": "Vuew",
+  "name": "Vuew - VueJS and WordPress theme",
+  "icons": [
+    {
+      "src": "static/images/icon.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "static/images/icon.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#32c8f2",
+  "display": "minimal-ui",
+  "theme_color": "#32c8f2"
+}

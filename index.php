@@ -7,6 +7,8 @@
     <link rel="pingback" href="<?php bloginfo( 'pingback_url' ); ?>">
 
     <title>VUEW - A VueJS and WordPress Theme</title>
+    <link rel="manifest" href="<?php echo \Vuew\URL; ?>manifest.json">
+    <meta name="theme-color" content="#32c8f2"/>
 
 	<?php wp_head(); ?>
 
