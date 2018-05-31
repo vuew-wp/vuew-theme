@@ -6,7 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="pingback" href="<?php bloginfo( 'pingback_url' ); ?>">
 
-    <title>VUEW - A VueJS and WordPress Theme</title>
+    <?php // @todo make dynamic ?>
+    <title>VUEW</title>
+    <meta name="Description" content="A VueJS and WordPress Theme">
+
     <link rel="manifest" href="<?php echo \Vuew\URL; ?>manifest.json">
     <meta name="theme-color" content="#32c8f2"/>
 
@@ -62,4 +65,3 @@
 
 </body>
 </html>
-
