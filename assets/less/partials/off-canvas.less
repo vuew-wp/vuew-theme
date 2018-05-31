@@ -1,0 +1,71 @@
+.vw-off-canvas {
+
+  &-bar {
+    position: fixed;
+    top: 100px;
+    bottom: 0;
+    width: @vw-pff-canvas-width;
+    z-index: 1;
+    left: -@vw-pff-canvas-width;
+    background-color: @vw-color-lighter;
+    overflow-x: hidden;
+    transform: translateX(0);
+    transition: transform 0.4s;
+
+  }
+
+  &-overlay {
+    height: 0;
+    opacity: 0;
+    transition: height 0s, opacity 0.2s;
+    background-color: @vw-color-lighter;
+  }
+
+  //Toggles class on root component
+  &-open {
+
+    .vw-off-canvas-bar {
+      transform: translateX(100%);
+    }
+
+    .vw-site-container {
+      transform: translateX(80%);
+      opacity: 0.6
+    }
+
+    .vw-off-canvas-overlay {
+      height: 100%;
+      opacity: 0.6;
+    }
+
+  }
+}
+
+main {
+  overflow: hidden;
+}
+
+.vw-site-container {
+  transform: translateX(0);
+  transition: transform 0.4s;
+  display: block !important;
+}
+
+@media ( min-width: @breakpoint-medium ) {
+
+  @vw-pff-canvas-width: 50%;
+
+  .vw-off-canvas {
+
+    &-bar {
+      width: @vw-pff-canvas-width;
+      left: -@vw-pff-canvas-width;
+    }
+
+    &-open {
+      .vw-site-container {
+        transform: translateX(@vw-pff-canvas-width);
+      }
+    }
+  }
+}
