@@ -5,9 +5,13 @@
 </template>
 <script>
     export default {
-        methods:{
-            toggleOffCanvas(){
-                this.$store.dispatch( 'toggleOffCanvas' );
+        props: {
+            target: ""
+        },
+        methods: {
+            toggleOffCanvas() {
+                const isVisible = this.$store.getters['getOffCanvasState']( this.target );
+                this.$store.dispatch('toggleOffCanvas', {target: this.target, open: !isVisible});
             }
         }
     }

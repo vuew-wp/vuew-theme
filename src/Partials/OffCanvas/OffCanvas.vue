@@ -1,30 +1,26 @@
 <template>
     <div>
         <div class="vw-off-canvas-bar uk-box-shadow-small">
-            <nav-menu :menu="menu"></nav-menu>
+            <slot></slot>
         </div>
-        <off-canvas-toggle
+        <off-canvas-toggle :target="target"
                 class="vw-off-canvas-overlay uk-position-top uk-position-fixed uk-width-1-1 uk-height-1-1"></off-canvas-toggle>
     </div>
 </template>
 <script>
 
-    import NavMenu from '../NavMenu/NavMenu.vue';
     import OffCanvasToggle from "./OffCanvasToggle";
 
     export default {
 
         components: {
-            OffCanvasToggle,
-            NavMenu
+            OffCanvasToggle
         },
-        data() {
-            return {
-                menu: Vuew.config.navigation.menus.primary_menu
-            };
+        props: {
+            target: ""
         },
         mounted() {
-            this.$store.dispatch('toggleOffCanvas', false);
+            this.$store.dispatch( 'toggleOffCanvas', { target: this.target, open: false } );
         },
         watch: {
             isVisible: function (visible) {
@@ -44,86 +40,9 @@
         },
         computed: {
             isVisible: function () {
-                return this.$store.getters['getOffCanvasState'];
+                return this.$store.getters['getOffCanvasState']( this.target );
             }
         }
     };
 
 </script>
-<style lang="less">
-    @import "../../../assets/less/base/vars";
-    @import "../../../assets/less/vendor/uikit/variables";
-    /* The side navigation menu */
-    .vw-off-canvas {
-
-        &-bar {
-            position: fixed;
-            top: 100px;
-            bottom: 0;
-            width: @vw-pff-canvas-width;
-            z-index: 1;
-            left: -@vw-pff-canvas-width;
-            background-color: @vw-color-lighter;
-            overflow-x: hidden;
-            transform: translateX(0);
-            transition: transform 0.4s;
-
-        }
-
-        &-overlay {
-            height: 0;
-            opacity: 0;
-            transition: height 0s, opacity 0.2s;
-            background-color: @vw-color-lighter;
-        }
-
-        //Toggles class on root component
-        &-open {
-
-            .vw-off-canvas-bar {
-                transform: translateX(100%);
-            }
-
-            .vw-site-container {
-                transform: translateX(80%);
-                opacity: 0.6
-            }
-
-            .vw-off-canvas-overlay {
-                height: 100%;
-                opacity: 0.6;
-            }
-
-        }
-    }
-
-    main {
-        overflow: hidden;
-    }
-
-    .vw-site-container {
-        transform: translateX(0);
-        transition: transform 0.4s;
-        display: block !important;
-    }
-
-    @media ( min-width: @breakpoint-medium ) {
-
-        @vw-pff-canvas-width: 50%;
-
-        .vw-off-canvas {
-
-            &-bar {
-                width: @vw-pff-canvas-width;
-                left: -@vw-pff-canvas-width;
-            }
-
-            &-open {
-                .vw-site-container {
-                    transform: translateX(@vw-pff-canvas-width);
-                }
-            }
-        }
-    }
-
-</style>
