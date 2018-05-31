@@ -3,32 +3,38 @@
   "title" : "User login",
   "properties" : [
     {
-      "id" : "userName",
+      "id" : "username",
+      "required" : true,
       "type" : "text",
       "placeholder" : "Username?"
     },
     {
-      "id" : "firstName",
+      "id" : "firstname",
+      "required" : true,
       "type" : "text",
       "placeholder" : "Username?"
     },
     {
-      "id" : "lastName",
+      "id" : "lastname",
+      "required" : true,
       "type" : "text",
       "placeholder" : "Username?"
     },
     {
       "id" : "email",
+      "required" : true,
       "type" : "email",
       "placeholder" : "Username?"
     },
     {
       "id" : "password",
+      "required" : true,
       "type" : "password",
       "placeholder" : "Username?"
     },
     {
-      "id" : "passwordTwo",
+      "id" : "password_two",
+      "required" : true,
       "type" : "password",
       "match" : "password",
       "placeholder" : "Username?"

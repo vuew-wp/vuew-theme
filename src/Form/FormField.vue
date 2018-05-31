@@ -1,39 +1,47 @@
 <template>
     <fieldset v-if="field.type === 'text' || field.type === 'email' || field.type === 'password'">
-        <input :type="field.type" :name="field.Id" v-on:keyup="validate( $event.target.value, field )">
+        <input :type="field.type" :name="field.Id" v-on:change="validate( $event.target.value, field )">
     </fieldset>
-    <fieldset v-else-if="field.type === 'text'">
-        <input :type="field.type" v-on:keyup="validate( $event, field )">
-    </fieldset>
+    <!--<fieldset v-else-if="field.type === 'text'">
+        <input :type="field.type" v-on:change="validate( $event, field )">
+    </fieldset>-->
 </template>
 
 <script>
 
     import formFields from './form-field-types';
 
+    import _ from 'lodash';
+
     export default {
 
         props: [
             'field'
         ],
+        data() {
+            return {
+                json: {}
+            }
+        },
+        mounted(){
+            this.json = _.merge( formFields[ this.field.type ], this.field );
+        },
         methods:{
             validate(value, field){
-                //console.log(value,field,formFields[field.type].validate_callback);
+                const vm = this;
                 //@todo replace with try catch
-                if( formFields[field.type][ 'validate_callback' ]( value ) ) {
-                    this.$emit('keyup', {value: value, id: field.id})
+                const validateMethod = this.json[ 'validate_callback' ];
+                if( vm[ validateMethod ]( value ) ) {
+                    this.$emit( 'change', { value: value, id: field.id } );
                 }
             },
             validateText( value ){
-                console.log(value)
                 return true;
             },
             validatePassword( value ){
-                console.log(value)
                 return true;
             },
             validateEmail( value ){
-                console.log(value)
                 return true;
             }
         }

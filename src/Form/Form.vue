@@ -2,8 +2,8 @@
     <div>
         <p v-html="formData.title"></p>
         <form id="vw-user-form-registration" @submit.prevent="handleSubmit" novalidate="true">
-            <form-field v-for="field in formData.properties" :key="field.id" :field="field" v-on:keyup="handleChange"></form-field>
-            <input type="submit" value="Submit">
+            <form-field v-for="field in formData.properties" :key="field.id" :field="field" v-on:change="handleChange"></form-field>
+            <input type="submit" value="Submit" :disabled="isDisabled">
         </form>
     </div>
 </template>
@@ -12,32 +12,39 @@
 
     import FormField from "./FormField";
 
+    import _ from 'lodash';
+
     export default {
 
         components: {
             FormField
         },
         mounted(){
-           // console.log(this.fields)
+            const requiredFields = _.filter( this.formData.properties, 'required' );
+            for( let i = 0, m = requiredFields.length; i<m;i++){
+                this.requiredFields[ requiredFields[i].id ] = {
+                    valid: false
+                }
+            }
         },
         methods: {
             handleSubmit() {
-                //this.formPayload;
-                this.$parent.submit(this.formModel)
+                this.submit(this.userData);
             },
             handleChange( payload ){
-                this.formModel[ payload.id ] = payload.value;
-                console.log("CHAMNGED",this.formModel,this.formData);
-            }
-        },
-        props: {
-            formData: {
-                type: Object
+                this.userData[ payload.id ] = payload.value;
+                this.isDisabled = false;
             },
+            submit(){
+                console.error( 'The submit() method should be overridden.' )
+            }
         },
         data() {
             return {
-                formModel: {}
+                userData: {},
+                formData: {},
+                isDisabled: true,
+                requiredFields: {}
             }
         },
     }
