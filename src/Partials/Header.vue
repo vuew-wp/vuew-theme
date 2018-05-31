@@ -1,8 +1,8 @@
 <template>
     <header class="vw-primary-header uk-position-fixed uk-width-1-1 uk-box-shadow-small uk-box-shadow-hover-medium">
         <custom-logo></custom-logo>
-        <off-canvas-toggle>MENU</off-canvas-toggle>
-        <user-registration></user-registration>
+        <off-canvas-toggle target="offCanvasMenu">MENU</off-canvas-toggle>
+        <!--<vw-user></vw-user>-->
     </header>
 </template>
 <script>
@@ -16,19 +16,22 @@
     export default {
 
         components:{
-            UserRegistration,
+            'vw-user' : UserRegistration,
             OffCanvasToggle,
             CustomLogo
         },
         methods:{
+            visibile( visible ){
+                this.$el.style.top = visible ? "0" : "-100px";
+                this.visible = visible;
+            },
             handleScroll: _.throttle( function() {
 
                 const vm = this;
                 let currentScrollPos = window.pageYOffset;
 
                 if( currentScrollPos < 100 || currentScrollPos === vm.prevScrollPos ) {
-                    vm.$el.style.top = "0";
-                    this.visible = true;
+                    this.visibile( true );
                     return;
                 }
 
@@ -37,14 +40,12 @@
 
                 if ( scrollingUp ) {
                     if( ! this.visible )
-                        vm.$el.style.top = "0";
-                    this.visible = true;
+                        this.visibile( true );
                     return;
                 }
 
                 if( this.visible )
-                    vm.$el.style.top = "-100px";
-                this.visible = false;
+                    this.visibile( false );
 
             },  100 )
         },
