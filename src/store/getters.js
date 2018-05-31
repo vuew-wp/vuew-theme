@@ -7,8 +7,7 @@ export const getters = {
             return state.currentPath.replace(/\/$/, "");
         }
     },
-    getOffCanvasState: ( state ) => {
-        console.log(state)
-        return state.offCanvasOpen;
+    getOffCanvasState: ( state ) => ( target ) => {
+        return state[ target ];
     }
 };

@@ -4,11 +4,11 @@ export const mutations = {
     'UPDATE_CURRENT_PATH': (state, path) => {
         Vue.set( state, 'currentPath', path );
     },
-    'TOGGLE_OFF_CANVAS': ( state, open ) => {
-        if( typeof open !== 'undefined' ){
-            Vue.set( state, 'offCanvasOpen', open );
+    'TOGGLE_OFF_CANVAS': ( state, data ) => {
+        if( data.hasOwnProperty( 'open' ) ){
+            Vue.set( state, [ data.target ], data.open );
             return;
         }
-        Vue.set( state, 'offCanvasOpen', ! state.offCanvasOpen );
+        Vue.set( state, [ data.target ], ! state[ data.target ] );
     }
 };

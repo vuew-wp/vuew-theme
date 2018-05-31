@@ -1,4 +1,3 @@
 export default {
-    currentPath : '',
-    offCanvasOpen: false
+    currentPath : ''
 };
