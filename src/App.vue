@@ -7,7 +7,7 @@
         </transition>
         <pre-loader v-show="!isLoaded"></pre-loader>
         <vw-footer></vw-footer>
-        <off-canvas></off-canvas>
+        <off-canvas-menu></off-canvas-menu>
     </main>
 </template>
 <script>
@@ -18,12 +18,12 @@
 
     import { helpers } from './common/helpers';
     import PreLoader from './Proxy/PreLoader';
-    import OffCanvas from "./Partials/OffCanvas/OffCanvas";
+    import OffCanvasMenu from "./Partials/OffCanvas/OffCanvasMenu";
 
     export default {
 
         components:{
-            OffCanvas,
+            OffCanvasMenu,
             PreLoader,
             VwHeader,
             VwFooter,
