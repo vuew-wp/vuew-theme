@@ -70,7 +70,10 @@ function vuew_assets() {
 	$vuew_json_config = [
 		'restRoot' => rest_url(),
 		'baseUrl'  => home_url(),
-		'nonce'    => wp_create_nonce( 'wp_rest' ),
+		'nonces'   => [
+			'main'          => wp_create_nonce( 'wp_rest' ),
+			'userAuth' => wp_create_nonce( 'vuew_user_auth' )
+		],
 		'config'   => apply_filters( 'Vuew\json', [
 			'customLogo'  => false,
 			'boot'        => functions\boot\object(),

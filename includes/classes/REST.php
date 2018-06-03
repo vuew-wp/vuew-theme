@@ -27,6 +27,13 @@ class REST extends Factory {
 		'entry-category'
 	];
 
+	const HTTP_HEADER_PREFIX = 'X-Vuew';
+
+	const HTTP_HEADERS = [
+		'user-reg' => 'User-Registration',
+		'user-login' => 'User-Login'
+	];
+
 	const API_NAMESPACE = 'vuew/v2';
 
 	protected static $date_format = '';
@@ -52,7 +59,7 @@ class REST extends Factory {
 		/**
 		 * Custom endpoints
 		 */
-		add_action( 'rest_api_init', array( __CLASS__, 'rest_endpoints' ), 10 );
+		add_action( 'rest_api_init', array( __CLASS__, 'rest_api_init' ), 10 );
 	}
 
 	/**
@@ -74,7 +81,7 @@ class REST extends Factory {
 		$params = $request->get_params();
 
 		/** Ensure we only proceed if VuewQuery is set */
-		if ( ! isset( $params['vq'] ) ) {
+		if ( ! isset( $params['vr'] ) ) {
 			return $data;
 		}
 
@@ -314,17 +321,157 @@ class REST extends Factory {
 
 	}
 
-	public static function rest_endpoints() {
+	public static function rest_api_init() {
+		register_rest_route( self::API_NAMESPACE, '/user/login', [
+			[
+				'methods'             => \WP_REST_Server::CREATABLE,
+				'callback'            => array( __CLASS__, 'user_login' )
+			]
+		] );
 		register_rest_route( self::API_NAMESPACE, '/user/register', [
 			[
-				'methods'             => \WP_REST_Server::READABLE,
+				'methods'             => \WP_REST_Server::CREATABLE,
 				'callback'            => array( __CLASS__, 'user_register' )
 			]
 		] );
 	}
 
+	public static function auth_min_security( &$params ){
+
+		/**
+		 * Return immediately if this is not a Vuew Request
+		 */
+		if( ! isset( $params['vr'] ) ) {
+			return static::format_response( 'rest_not_vuew_request', __( 'Not Vuew REST Request.' ), self::HTTP_HEADERS['user-reg'], 403 );
+		}
+
+		/**
+		 * Already logged in
+		 */
+		if ( is_user_logged_in() ) {
+			return static::format_response( 'rest_user_already_logged_in', __( 'User already logged in.' ), self::HTTP_HEADERS['user-reg'], 203 );
+		}
+
+		/**
+		 * Don't take any nonsense!
+		 */
+		if ( ! wp_verify_nonce( $params['params']['nonce'], 'vuew_user_auth' ) ) {
+			return static::format_response( 'rest_cookie_invalid_nonce', __( 'Nonce verification failure.' ), self::HTTP_HEADERS['user-reg'], 403 );
+		}
+
+		return true;
+	}
+
+	public static function user_login( \WP_REST_Request $request ) {
+
+		/** @var array $params */
+		$params = $request->get_params();
+		$params = $params['params'];
+
+		$info = [
+			'user_login'    => $params[ 'login-username' ],
+			'user_password' => $params[ 'login-password' ],
+			'remember'      => isset( $params[ 'login-password' ] ) ? $params[ 'login-password' ] : true
+		];
+
+		$user_signon = wp_signon( $info, is_ssl() );
+
+		if( is_wp_error( $user_signon ) ) {
+			$error = isset( $user_signon->get_error_codes()[0] ) ? $user_signon->get_error_codes()[0] : null;
+			$error_msg = __( 'Login failure, please check all fields and try again.');
+			if( null !== $error ) {
+				if ( $error === 'invalid_username' ) {
+					$error_msg = __( 'Login failure, invalid username and/or password.');
+				}
+				if ( $error === 'incorrect_password' ) {
+					$error_msg = __( 'Login failure, invalid password.');
+				}
+			}
+
+			return static::format_response( null, $error_msg, self::HTTP_HEADERS['user-login'], 409 );
+		}
+
+		wp_set_current_user( $user_signon->ID );
+		return static::format_response( null, __( 'Login successful.' ), self::HTTP_HEADERS['user-login'] );
+
+	}
+
 	public static function user_register( \WP_REST_Request $request ) {
-		$params       = $request->get_params();
-		return $params;
+
+		/** @var array $params */
+		$params = $request->get_params();
+
+		/**
+		 * Return immediately if min security fails
+		 */
+		$min_security_pass = self::auth_min_security( $params );
+		if( true !== $min_security_pass ){
+			return $min_security_pass;
+		}
+
+		$params = $params['params'];
+
+		/**
+		 * WP Admin->Settings->General
+		 */
+		if ( 0 === (int) get_option( 'users_can_register' ) ) {
+			return static::format_response( 'rest_user_registration_not_permitted', __( 'Registration is not permitted for this site.' ), self::HTTP_HEADERS['user-reg'], 403 );
+		}
+
+		$userdata = [
+			'user_login' => $params['register-username'],
+			'user_email' => $params['register-email'],
+			'user_pass'  => $params['register-password']  // When creating an user, `user_pass` is expected.
+		];
+
+		if( array_search('', $userdata ) !== false ){
+			return static::format_response( 'rest_user_empty_field', __( 'One or more required fields found empty.' ), self::HTTP_HEADERS['user-reg'], 409 );
+		}
+
+		if( ! is_email( $params['register-email'] ) ){
+			return static::format_response( 'rest_user_invalid_email', __( 'Invalid email.' ), self::HTTP_HEADERS['user-reg'], 409 );
+		}
+
+		$userdata['role'] = get_option( 'default_role', 'subscriber' );
+
+		$user_register = wp_insert_user( $userdata );
+
+		if( is_wp_error( $user_register ) ) {
+			return static::format_response( null, $user_register->get_error_message(), self::HTTP_HEADERS['user-reg'], 409 );
+		}
+
+		/**
+		$userdata['user_password'] = $params['password'];
+		unset( $userdata['user_pass'] );
+
+		wp_set_current_user( $user_register, $userdata[ 'user_login' ] );
+		wp_set_auth_cookie( $user_register, true, is_ssl() );
+		do_action( 'wp_login', $params[ 'user_email' ] );
+		*/
+
+		return static::format_response( null, __( 'User authenticated.' ), self::HTTP_HEADERS['user-reg'] );
+
+	}
+
+	protected static function format_response( $code = null, $message = '', $header_key = '', $status_code = 200 )
+	{
+
+		$message = '' !== $message ? $message : __( 'No message provided', 'vuew' );
+		//$code = $code === null ? $message : $code;
+		$response = new \WP_REST_Response( [
+			'data' => [
+				'status' => $status_code
+			],
+			'code' => $code,
+			'message' => $message,
+		] );
+
+		$header_key = '' === $header_key ? $header_key : '-' . $header_key;
+
+		$response->set_status( $status_code );
+		$response->header( self::HTTP_HEADER_PREFIX . $header_key, $message );
+
+		return $response;
+
 	}
 }
