@@ -83,6 +83,10 @@ function vuew_assets() {
 				'paths'     => $routing['paths'],
 				'restBases' => REST_BASES
 			],
+			'user' => [
+				'is_logged_in' => is_user_logged_in(),
+				'can_register' => (int) get_option( 'users_can_register' )
+			],
 			'query'       => [
 				'ppp' => (int) get_query_var( 'posts_per_page', 6 )
 			],
