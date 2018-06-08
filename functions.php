@@ -44,13 +44,16 @@ function boot() {
 
 add_action( 'init', __NAMESPACE__ . '\boot' );
 
+function deregister_scripts(){
+	wp_deregister_script( 'wp-embed' );
+}
+add_action( 'wp_footer', '\Vuew\deregister_scripts' );
 
 /** @TODO move to file */
 add_action( 'wp_enqueue_scripts', '\Vuew\vuew_assets' );
 function vuew_assets() {
 
 	wp_dequeue_script( 'jquery' );
-	wp_dequeue_script( 'wp-embed' );
 
 	if ( 'dev' === ENV ) {
 		wp_enqueue_script( 'vuew', 'https://localhost:8080/dist/main.js', [], VER, true );
