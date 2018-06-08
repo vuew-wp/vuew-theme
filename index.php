@@ -52,7 +52,11 @@
 </noscript>
 
 <!-- APP - START -->
-<div id="vuew-app"><h1>LOADING</h1></div>
+<div id="vuew-app">
+    <header class="vw-primary-header uk-position-fixed uk-width-1-1 uk-box-shadow-small uk-box-shadow-hover-medium"><a href="/" class="uk-active">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 13.8 7" style="enable-background:new 0 0 13.8 7" xml:space="preserve"> <style type="text/css">.st0{fill-rule:evenodd;clip-rule:evenodd;fill:#fff}</style> <polygon class="st0" points="7.3,6.5 13,0.7 12.7,0.4 6.9,6.1 1.2,0.4 0.8,0.7 6.6,6.5 6.9,6.8 "></polygon> </svg>
+        </a> <a>MENU</a> / <a>USER</a></header>
+</div>
 <!-- APP - END -->
 
 <?php wp_footer(); ?>
