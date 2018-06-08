@@ -21,6 +21,15 @@
 
 <body <?php body_class(); ?>>
 
+<!-- APP - START -->
+<div id="vuew-app">
+    <header style="min-height: 100px;" class="vw-primary-header uk-position-fixed uk-width-1-1 uk-box-shadow-small uk-box-shadow-hover-medium">
+        <a href="/" class="uk-active" style="min-width: 100px;"><img src="https://www.10pl8.com/wp-content/uploads/2018/04/Screen-Shot-2018-04-20-at-10.47.51-PM.png" alt="VUEW - A VueJs and WordPress theme" style="width: 100px;"></a>
+        <a>MENU</a> / <a>USER</a>
+    </header>
+</div>
+<!-- APP - END -->
+
 <noscript>
     <div id="content" class="site-content">
         <div class="uk-grid">
@@ -50,19 +59,6 @@
         </div>
     </div>
 </noscript>
-
-<!-- APP - START -->
-<div id="vuew-app">
-
-    <header style="min-height: 100px;"
-            class="vw-primary-header uk-position-fixed uk-width-1-1 uk-box-shadow-small uk-box-shadow-hover-medium"><a
-                href="/" class="uk-active"><img
-                    src="https://www.10pl8.com/wp-content/uploads/2018/06/Screen-Shot-2018-04-20-at-10.47.51-PM-1.jpg"
-                    alt="VUEW - A VueJs and WordPress theme" style="min-width: 100px;"></a> <a>MENU</a> / <a>USER</a>
-    </header>
-
-</div>
-<!-- APP - END -->
 
 <?php wp_footer(); ?>
 
