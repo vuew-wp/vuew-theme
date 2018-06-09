@@ -1,7 +1,7 @@
 <?php get_header(); ?>
 
     <!-- APP - START -->
-    <div id="vuew-app">
+    <div style="position: absolute; top: 0; width: 100%; z-index: 0;">
         <header style="z-index: 2;
 			top: 0;
 			transition: top 0.3s;
@@ -24,6 +24,8 @@
 			padding: 0 20px 0 0;">&nbsp;
             </li>
         </ul>
+    </div>
+    <div id="vuew-app">
     </div>
     <!-- APP - END -->
 
