@@ -32,7 +32,7 @@
 
 <body <?php body_class(); ?>>
 
-<div style="position: absolute; top: 0; width: 100%; z-index: 0; font-family: Noto Sans,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,sans-serif;font-size: 16px;
+<!--<div style="position: absolute; top: 0; width: 100%; z-index: 0; font-family: Noto Sans,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,sans-serif;font-size: 16px;
     font-weight: 400;
     line-height: 1.5;">
     <header style="z-index: 2;
@@ -60,4 +60,4 @@
 			padding: 0 20px 0 0;">&nbsp;
         </li>
     </ul>
-</div>
+</div>-->
