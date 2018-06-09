@@ -60,8 +60,8 @@ function vuew_assets() {
 	}
 	if ( 'prod' === ENV ) {
 		/** JS */
-		wp_enqueue_script( 'vuew-vendor', URL . 'dist/vendor.js', [], VER, true );
-		wp_enqueue_script( 'vuew', URL . 'dist/main.js', [ 'vuew-vendor' ], VER, true );
+		//wp_enqueue_script( 'vuew-vendor', URL . 'dist/vendor.js', [], VER, true );
+		//wp_enqueue_script( 'vuew', URL . 'dist/main.js', [ 'vuew-vendor' ], VER, true );
 		/** CSS */
 		wp_enqueue_style( 'vuew', URL . 'dist/main.css', [], VER );
 	}
