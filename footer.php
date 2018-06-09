@@ -5,7 +5,9 @@
 
 ?>
 
-<div style="position: absolute; top: 0; width: 100%; z-index: 3;">
+<div style="position: absolute; top: 0; width: 100%; z-index: 0; font-family: Noto Sans,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,sans-serif;font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;">
 	<header style="z-index: 2;
 			top: 0;
 			transition: top 0.3s;
@@ -17,7 +19,10 @@
 				alt="VUEW - A VueJs and WordPress theme" style="width: 100px;"></a>
 		<a style="font-family: sans-serif;
 			color: #32c8f2;
-			line-height: 100px;">MENU</a> / <a style="font-family: sans-serif;
+			line-height: 100px;">MENU</a><span style="
+    -webkit-text-size-adjust: 100%;
+    background: #fff;
+    color: #666;"> / </span><a style="font-family: sans-serif;
 			color: #32c8f2;
 			line-height: 100px;">USER</a>
 	</header>
