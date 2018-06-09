@@ -23,7 +23,8 @@ class Menu extends Factory {
 	public static function init() {
 		\register_nav_menus(
 			[
-				'primary_menu' => __( 'Primary Menu' ),
+				'top_level' => __( 'Top level' ),
+				'off_canvas' => __( 'Off canvas' ),
 				'footer_menu'  => __( 'Footer Menu' ),
 			]
 		);
@@ -39,7 +40,7 @@ class Menu extends Factory {
 		/** @var array $menu_locations */
 		$menu_locations = get_nav_menu_locations();
 		/** @var array $vuew_menus */
-		$vuew_menus = [ 'primary_menu', 'footer_menu' ];
+		$vuew_menus = [ 'off_canvas', 'top_level', 'footer_menu' ];
 		/** @var array $fields_to_get Only these fields must be plucked */
 		$fields_to_get = [
 			'ID',
