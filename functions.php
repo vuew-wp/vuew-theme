@@ -66,60 +66,66 @@ function vuew_assets() {
 		//wp_enqueue_style( 'vuew', URL . 'dist/main.css', [], VER );
 	}
 
-	/** @var array $routing */
-	$routing = Menu::routing();
+	if ( false === ( $vuew_boot_json = get_transient( 'vuew_boot_json' ) ) ) {
 
-	/** @var array $vuew_json_config */
-	$vuew_json_config = [
-		'restRoot' => rest_url(),
-		'baseUrl'  => home_url(),
-		'nonces'   => [
-			'main'          => wp_create_nonce( 'wp_rest' ),
-			'userAuth' => wp_create_nonce( 'vuew_user_auth' )
-		],
-		'config'   => apply_filters( 'Vuew\json', [
-			'customLogo'  => false,
-			'boot'        => functions\boot\object(),
-			'pageOnFront' => (int) get_option( 'page_on_front' ),
-			'navigation'  => [
-				'menus'     => $routing['menus'],
-				'paths'     => $routing['paths'],
-				'restBases' => REST_BASES
+		/** @var array $routing */
+		$routing = Menu::routing();
+
+		/** @var array $vuew_json_config */
+		$vuew_json_config = [
+			'restRoot' => rest_url(),
+			'baseUrl'  => home_url(),
+			'nonces'   => [
+				'main'     => wp_create_nonce( 'wp_rest' ),
+				'userAuth' => wp_create_nonce( 'vuew_user_auth' )
 			],
-			'user' => [
-				'is_logged_in' => is_user_logged_in(),
-				'can_register' => (int) get_option( 'users_can_register' )
-			],
-			'query'       => [
-				'ppp' => (int) get_query_var( 'posts_per_page', 6 )
-			],
-			'layout' => [
-				'archives' => [
-					'home'              => [
-						'columns' => 3,
-						'type' => 'post-vuew'
-					],
-					'post_type_archive' => [
-						'columns' => 2
-					],
-					'taxonomy'          => [
-						'columns' => 4
+			'config'   => apply_filters( 'Vuew\json', [
+				'customLogo'  => false,
+				'boot'        => functions\boot\object(),
+				'pageOnFront' => (int) get_option( 'page_on_front' ),
+				'navigation'  => [
+					'menus'     => $routing['menus'],
+					'paths'     => $routing['paths'],
+					'restBases' => REST_BASES
+				],
+				'user'        => [
+					'is_logged_in' => is_user_logged_in(),
+					'can_register' => (int) get_option( 'users_can_register' )
+				],
+				'query'       => [
+					'ppp' => (int) get_query_var( 'posts_per_page', 6 )
+				],
+				'layout'      => [
+					'archives' => [
+						'home'              => [
+							'columns' => 3,
+							'type'    => 'post-vuew'
+						],
+						'post_type_archive' => [
+							'columns' => 2
+						],
+						'taxonomy'          => [
+							'columns' => 4
+						]
 					]
 				]
-			]
-		] )
-	];
+			] )
+		];
 
-	if ( has_custom_logo() ) {
-		$custom_logo_id = get_theme_mod( 'custom_logo' );
-		$logo           = wp_get_attachment_image_src( $custom_logo_id, 'full' );
+		if ( has_custom_logo() ) {
+			$custom_logo_id = get_theme_mod( 'custom_logo' );
+			$logo           = wp_get_attachment_image_src( $custom_logo_id, 'full' );
 
-		$vuew_json_config['config']['customLogo'] = $logo[0];
+			$vuew_json_config['config']['customLogo'] = $logo[0];
+		}
+
+		$vuew_boot_json = apply_filters( __FUNCTION__, $vuew_json_config );
+
+		set_transient( 'vuew_boot_json', $vuew_json_config, MINUTE_IN_SECONDS );
+
 	}
 
-	$vuew_json_config = apply_filters( __FUNCTION__, $vuew_json_config );
-
-	wp_localize_script( 'vuew', 'Vuew', $vuew_json_config );
+	wp_localize_script( 'vuew', 'Vuew', $vuew_boot_json );
 
 }
 

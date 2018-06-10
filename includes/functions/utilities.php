@@ -52,7 +52,7 @@ function vw_get_requested_uri(){
 }
 
 function always_excerpt( $content, $excerpt = '' ){
-	if( '' !== $excerpt ) {
+	if( '' !== $excerpt && null !== $excerpt ) {
 		return nl2br( $excerpt );
 	}
 	$text = strip_shortcodes( $content );
