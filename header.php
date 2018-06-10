@@ -21,8 +21,6 @@
 
 	<?php wp_head(); ?>
 
-    <link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet">
-
     <style>
         body {
             margin: 0;
