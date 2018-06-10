@@ -54,6 +54,11 @@ class REST extends Factory {
 
 		add_action( 'rest_prepare_post_type', [ __CLASS__, 'intercept_rest_prepare' ], 10, 3 );
 
+		/*add_action( 'rest_dispatch_request', function( $request, $route, $handler ){
+			$request = $request;
+			return $request;
+		}, 10, 3 );*/
+
 		static::$date_format = get_option( 'date_format' );
 
 		/**
@@ -207,9 +212,10 @@ class REST extends Factory {
 		static::query( $data->data, [
 			'tax_query'      => [
 				[
-					'taxonomy' => $item->taxonomy,
-					'field'    => 'id',
-					'terms'    => $item->term_id
+					'taxonomy'         => $item->taxonomy,
+					'field'            => 'id',
+					'terms'            => $item->term_id,
+					'include_children' => false
 				]
 			],
 			'posts_per_page' => get_option( 'posts_per_page' )
@@ -276,6 +282,7 @@ class REST extends Factory {
 
 			$_data['post_count']  = $query->post_count;
 			$_data['found_posts'] = (int) $query->found_posts;
+			$_data['whole'] = $query;
 
 			foreach ( $query->posts as $p ) {
 				/** @var int $attachment_id */

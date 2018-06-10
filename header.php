@@ -20,8 +20,9 @@
     <meta name="theme-color" content="#32c8f2"/>
 
 	<?php wp_head(); ?>
-    
+
     <link rel="preload" href="https://fonts.googleapis.com/css?family=Noto+Sans" as="style">
+    <link rel="preload" href="<?php echo get_theme_file_uri('dist/main.css'); ?>" as="style">
 
     <style>
         body {

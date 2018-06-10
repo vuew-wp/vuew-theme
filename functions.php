@@ -81,7 +81,6 @@ function vuew_assets() {
 			],
 			'config'   => apply_filters( 'Vuew\json', [
 				'customLogo'  => false,
-				'boot'        => functions\boot\object(),
 				'pageOnFront' => (int) get_option( 'page_on_front' ),
 				'navigation'  => [
 					'menus'     => $routing['menus'],
@@ -124,6 +123,9 @@ function vuew_assets() {
 		set_transient( 'vuew_boot_json', $vuew_json_config, MINUTE_IN_SECONDS );
 
 	}
+
+	$vuew_boot_json['config']['boot'] = functions\boot\object();
+	$vuew_boot_json['config']['css'] = get_theme_file_uri( 'dist/main.css' );
 
 	wp_localize_script( 'vuew', 'Vuew', $vuew_boot_json );
 
