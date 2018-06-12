@@ -36,6 +36,10 @@ require_once( DIR . 'includes/classes/Menu.php' );
 require_once( DIR . 'includes/classes/REST.php' );
 REST::create();
 
+add_filter('jpeg_quality', function(){
+	return 40;
+});
+
 function boot() {
 	/** @const array \Vuew\REST_BASES */
 	define( __NAMESPACE__ . '\REST_BASES', functions\rest_api\map_bases() );
