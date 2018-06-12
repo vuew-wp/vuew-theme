@@ -17,12 +17,11 @@
     <meta name="Description" content="A VueJS and WordPress Theme">
 
     <link rel="manifest" href="<?php echo \Vuew\URL; ?>manifest.json">
-    <meta name="theme-color" content="#32c8f2"/>
+    <meta name="theme-color" content="#15a9d1"/>
 
 	<?php wp_head(); ?>
 
-    <link rel="preload" href="https://fonts.googleapis.com/css?family=Noto+Sans" as="style">
-    <link rel="preload" href="<?php echo get_theme_file_uri( 'dist/main.css' ); ?>" as="style">
+
 
     <style>
         body {
@@ -32,6 +31,9 @@
 </head>
 
 <body <?php body_class(); ?>>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans">
+<link rel="stylesheet" href="<?php echo get_theme_file_uri( 'dist/main.css' ); ?>">
 
 <div style="position: absolute; top: 0; width: 100%; z-index: 0; font-family: Noto Sans,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,sans-serif;font-size: 16px;
     font-weight: 400;
@@ -55,7 +57,7 @@
                         }
 
                         .st2 {
-                            fill: #32c8f2
+                            fill: #15a9d1
                         }
 
                         .st3 {
@@ -112,16 +114,16 @@
 
         <div style="float: right; padding-right: 15px">
             <a style="font-family: sans-serif;
-			color: #32c8f2;
+			color: #15a9d1;
 			line-height: 100px;">MENU</a><span style="
     -webkit-text-size-adjust: 100%;
     background: #fff;
     color: #666;"> / </span><a style="font-family: sans-serif;
-			color: #32c8f2;
+			color: #15a9d1;
 			line-height: 100px;">USER</a>
         </div>
     </header>
-    <ul style="margin: 0 0 20px; background-color:#32c8f2; z-index: 0">
+    <ul style="margin: 0 0 20px; background-color:#15a9d1; z-index: 0">
         <li style="list-style: none;
 			display: inline-block;
 			margin: 10px 0 10px 20px;
