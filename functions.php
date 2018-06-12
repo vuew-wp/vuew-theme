@@ -53,6 +53,19 @@ function deregister_scripts(){
 }
 add_action( 'wp_footer', '\Vuew\deregister_scripts' );
 
+function allow_svg( $mimes ) {
+	$mimes[ 'svg' ] = 'image/svg+xml';
+	return $mimes;
+}
+add_filter( 'upload_mimes', '\Vuew\allow_svg' );
+
+function defer_async($tag, $handle) {
+	if ( false === strpos( $handle, 'vuew' ) )
+		return $tag;
+	return str_replace( ' src', ' defer src', $tag );
+}
+add_filter('script_loader_tag', '\Vuew\defer_async', 10, 2);
+
 /** @TODO move to file */
 add_action( 'wp_enqueue_scripts', '\Vuew\vuew_assets' );
 function vuew_assets() {
