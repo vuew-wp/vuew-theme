@@ -8,7 +8,8 @@
 <noscript>
 	<div id="content" class="site-content">
 		<div class="uk-grid">
-			<?php
+
+            <?php
 
 			if ( have_posts() ) {
 
@@ -38,10 +39,10 @@
 <?php wp_footer(); ?>
 
 <script>
-    wp.hooks.addFilter('myTestFilter', function (query) {
+   /* wp.hooks.addFilter('myTestFilter', function (query) {
         //query.payload.collection = 'poo';
         return query;
-    });
+    });*/
 </script>
 
 </body>
