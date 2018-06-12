@@ -21,10 +21,6 @@
 
 	<?php wp_head(); ?>
 
-    <!--https://github.com/filamentgroup/loadCSS/-->
-    <link rel="preload" href="https://fonts.googleapis.com/css?family=Noto+Sans" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <link rel="preload" href="<?php echo get_theme_file_uri( 'dist/main.css' ); ?>" as="style" onload="this.onload=null;this.rel='stylesheet'">
-
     <style>
         body {
             margin: 0;
@@ -33,6 +29,10 @@
 </head>
 
 <body <?php body_class(); ?>>
+
+<!--https://github.com/filamentgroup/loadCSS/-->
+<link rel="preload" href="https://fonts.googleapis.com/css?family=Noto+Sans" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<link rel="preload" href="<?php echo get_theme_file_uri( 'dist/main.css' ); ?>" as="style" onload="this.onload=null;this.rel='stylesheet'">
 
 <div style="position: absolute; top: 0; width: 100%; z-index: 0; font-family: Noto Sans,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,sans-serif;font-size: 16px;
     font-weight: 400;
