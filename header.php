@@ -21,7 +21,7 @@
 	<?php wp_head(); ?>
 
     <!--<link rel="preload" href="https://fonts.googleapis.com/css?family=Noto+Sans" as="style">-->
-    <link rel="preload" href="<?php echo get_theme_file_uri( 'dist/main.css' ); ?>" as="style">
+    <!--<link rel="preload" href="<?php /*echo get_theme_file_uri( 'dist/main.css' ); */?>" as="style">-->
 
 
     <!--https://github.com/filamentgroup/loadCSS/>
