@@ -14,7 +14,7 @@ use Vuew\Core\Menu;
 use Vuew\Core\REST;
 use Vuew\functions;
 
-const VER = '0.0.1';
+const VER = '0.0.2';
 const ENV = 'prod';
 
 /** URL & Path to theme */
@@ -142,7 +142,7 @@ function vuew_assets() {
 	}
 
 	$vuew_boot_json['config']['boot'] = functions\boot\object();
-	$vuew_boot_json['config']['css'] = get_theme_file_uri( 'dist/main.css' );
+	$vuew_boot_json['config']['css']  = get_theme_file_uri( 'dist/main.css' );
 
 	wp_localize_script( 'vuew', 'Vuew', $vuew_boot_json );
 
