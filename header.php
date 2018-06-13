@@ -10,7 +10,6 @@
 
     <meta charset="<?php bloginfo( 'charset' ); ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="pingback" href="<?php bloginfo( 'pingback_url' ); ?>">
 
 	<?php // @todo make dynamic ?>
     <title>VUEW</title>
@@ -21,7 +20,7 @@
 
 	<?php wp_head(); ?>
 
-    <link rel="preload" href="https://fonts.googleapis.com/css?family=Noto+Sans" as="style">
+    <!--<link rel="preload" href="https://fonts.googleapis.com/css?family=Noto+Sans" as="style">-->
     <link rel="preload" href="<?php echo get_theme_file_uri( 'dist/main.css' ); ?>" as="style">
 
 
