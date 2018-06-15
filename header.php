@@ -20,7 +20,7 @@
 
 	<?php wp_head(); ?>
 
-    <style id="vuew-app">
+    <style>
     <?php echo file_get_contents(get_theme_file_path('dist/main.css')); ?>
     </style>
 
