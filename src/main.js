@@ -44,6 +44,15 @@ import { store } from './store';
 import App from './App.vue';
 
 /**
+ * Analytics
+ */
+/*import VueAnalytics from 'vue-analytics'
+Vue.use(VueAnalytics, {
+    id: 'XXXXXX',
+    router
+})*/
+
+/**
  * Instantiate Vue root component
  * @type {Vue}
  */

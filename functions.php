@@ -69,7 +69,7 @@ function defer_async($tag, $handle) {
 add_filter('script_loader_tag', '\Vuew\defer_async', 10, 2);
 
 /** @TODO move to file */
-add_action( 'wp_enqueue_scripts', '\Vuew\vuew_assets' );
+add_action( 'wp_head', '\Vuew\vuew_assets' );
 function vuew_assets() {
 
 	wp_dequeue_script( 'jquery' );
@@ -79,8 +79,8 @@ function vuew_assets() {
 	}
 	else {
 		/** JS */
-		wp_enqueue_script( 'vuew-vendor', URL . 'dist/vendor.js', [], VER, true );
-		wp_enqueue_script( 'vuew', URL . 'dist/main.js', [ 'vuew-vendor' ], VER, true );
+		//wp_enqueue_script( 'vuew-vendor', URL . 'dist/vendor.js', [], VER, true );
+		//wp_enqueue_script( 'vuew', URL . 'dist/main.js', [ 'vuew-vendor' ], VER, true );
 		/** CSS */
 		//wp_enqueue_style( 'vuew', URL . 'dist/main.css', [], VER );
 	}
@@ -146,7 +146,11 @@ function vuew_assets() {
 	$vuew_boot_json['config']['boot'] = functions\boot\object();
 	$vuew_boot_json['config']['css']  = get_theme_file_uri( 'dist/main.css' );
 
-	wp_localize_script( 'vuew', 'Vuew', $vuew_boot_json );
+	?>
+	<script>
+		var Vuew = <?php echo json_encode($vuew_boot_json);?>;
+	</script>
+	<?php
 
 }
 
