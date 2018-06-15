@@ -6,8 +6,5 @@ export const getters = {
             }
             return state.currentPath.replace(/\/$/, "");
         }
-    },
-    getOffCanvasState: ( state ) => ( target ) => {
-        return state[ target ];
     }
 };

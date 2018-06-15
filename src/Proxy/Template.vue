@@ -1,5 +1,5 @@
 <template>
-    <component :is="query.component" :query-data="queryData" class="vw-site-container"></component>
+    <component :is="query.component" :query-data="queryData"></component>
 </template>
 
 <script>
@@ -15,11 +15,11 @@
     export default {
         components: {
             taxonomy:   () => ({
-                component: import( /* webpackChunkName: "taxonomy" */ '../Archive/Taxonomy.vue' ),
+                component: import( /* webpackChunkName: "archive" */ '../Archive/Taxonomy.vue' ),
                 ...LoadingErrorComponents
             }),
             post_type_archive:  () => ({
-                component: import( /* webpackChunkName: "post_type_archive" */ '../Archive/PostType.vue' ),
+                component: import( /* webpackChunkName: "archive" */ '../Archive/PostType.vue' ),
                 ...LoadingErrorComponents
             }),
             single:     () => ({
@@ -29,8 +29,8 @@
             home:       () => ({
                 component: parseInt( Vuew.config.pageOnFront ) > 0 ?
                     import( /* webpackChunkName: "home" */ '../Templates/Home.vue' ) :
-                    import( /* webpackChunkName: "index" */ '../Templates/Index.vue' ),
-                ...LoadingErrorComponents
+                    import( /* webpackChunkName: "index" */ '../Templates/Index.vue' )
+                //...LoadingErrorComponents
             }),
             PreLoader,
             four04: Four04
@@ -54,9 +54,3 @@
     };
 
 </script>
-<style lang="less">
-    @import "../../assets/less/base/vars";
-    .vw-site-container{
-        margin-top: @vw-header-height;
-    }
-</style>

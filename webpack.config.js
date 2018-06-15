@@ -2,6 +2,8 @@ const path = require('path');
 const fs = require('fs');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const PurgecssPlugin = require('purgecss-webpack-plugin')
+const glob = require('glob-all')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -119,7 +121,12 @@ module.exports = {
             VUEW_DEBUG: JSON.stringify(process.env.VUEW_DEBUG),
             NODE_ENV: JSON.stringify(process.env.NODE_ENV),
         }),
-        extractLess
+        extractLess,
+        // Make sure this is after ExtractTextPlugin!
+        /*new PurifyCSSPlugin({
+            // Give paths to parse for rules. These should be absolute!
+            paths: glob.sync(path.join(__dirname, 'app/!*.vue')),
+        })*/
     ]
 };
 
@@ -137,17 +144,25 @@ if (isProduction) {
                 NODE_ENV: '"production"'
             }
         }),
+        new OptimizeCSSPlugin(),
+        new PurgecssPlugin({
+            paths: glob.sync([
+                path.join(__dirname, './*.php'),
+                path.join(__dirname, './src/**/*.vue'),
+                path.join(__dirname, './src/**/*.js')
+            ]),
+            whitelistPatterns:  [/^uk-width-1-3+/g]
+        }),
         new webpack.optimize.UglifyJsPlugin({
             sourceMap: false,
             compress: {
                 warnings: false
             }
         }),
+        // duplicated CSS from different components can be deduped.
         new webpack.LoaderOptionsPlugin({
             minimize: true
         }),
-        // duplicated CSS from different components can be deduped.
-        new OptimizeCSSPlugin(),
         // split vendor js into its own file
         new webpack.optimize.CommonsChunkPlugin({
             name: 'vendor',

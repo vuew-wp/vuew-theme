@@ -19,6 +19,8 @@ import query from './modules/query'
 import cache from './modules/cache'
 /** Displaying data delivery stacktrace */
 import notify from './modules/notify'
+/** Displaying data delivery stacktrace */
+import layout from './modules/layout'
 
 Vue.use( Vuex );
 
@@ -34,7 +36,8 @@ export const store =  new Vuex.Store({
     modules: {
         query,
         cache,
-        notify
+        notify,
+        layout
     },
     strict: process.env.NODE_ENV !== 'production',
     plugins: []

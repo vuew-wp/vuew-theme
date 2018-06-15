@@ -1,43 +1,45 @@
 {
   "$schema" : "",
-  "title" : "User login",
+  "title" : "Register:",
   "properties" : [
     {
-      "id" : "username",
+      "label": "Username:",
+      "id" : "register-username",
       "required" : true,
       "type" : "text",
+      "desc" : "Select a unique username.",
       "placeholder" : "Username?"
     },
     {
-      "id" : "firstname",
+      "label" : "First name?",
+      "id" : "register-firstname",
       "required" : true,
       "type" : "text",
-      "placeholder" : "Username?"
+      "placeholder" : "First name?"
     },
     {
-      "id" : "lastname",
-      "required" : true,
+      "label" : "Last name?",
+      "id" : "register-lastname",
       "type" : "text",
-      "placeholder" : "Username?"
+      "placeholder" : "Last name?"
     },
     {
-      "id" : "email",
+      "label" : "Email?",
+      "id" : "register-email",
       "required" : true,
       "type" : "email",
-      "placeholder" : "Username?"
+      "placeholder" : "Email?"
     },
     {
-      "id" : "password",
+      "label": "Password:",
+      "id" : "register-password",
       "required" : true,
       "type" : "password",
-      "placeholder" : "Username?"
-    },
-    {
-      "id" : "password_two",
-      "required" : true,
-      "type" : "password",
-      "match" : "password",
-      "placeholder" : "Username?"
+      "placeholder" : "Password?",
+      "desc" : "Password must be 8 characters or more and contain a uppercase, lowercase, special character (|!@#$&*?^~) and number.",
+      "confirmInput" : true,
+      "strengthIndicator" : true,
+      "formType" : "register"
     }
   ]
 }

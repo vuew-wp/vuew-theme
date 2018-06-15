@@ -43,8 +43,9 @@
 </script>
 <style lang="less">
     @import "../../../assets/less/base/vars";
-    @vw-post-vuew-svg-height: 25px;
     .post-vuew{
+
+        background-color: @vw-color-darker;
 
         div:first-child{
             padding-bottom: 100%;
@@ -70,20 +71,19 @@
 
         }
 
-        &-date{
-            color: #ffffff;
-            padding: 4px 8px;
-        }
-
         &-title{
             padding: 30px 30px ( 30px + @vw-post-vuew-svg-height ) 30px;
             background-color: fade( @vw-color-darkest, 30% );
         }
 
+        &-date{
+            color: #ffffff;
+            padding: 4px 8px;
+        }
+
         &-excerpt{
             overflow: hidden;
             width: 100%;
-            background-color: @vw-color-darker;
 
             a{
                 color: @vw-color-darkest;

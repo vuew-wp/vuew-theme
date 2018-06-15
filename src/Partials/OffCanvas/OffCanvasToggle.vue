@@ -10,8 +10,8 @@
         },
         methods: {
             toggleOffCanvas() {
-                const isVisible = this.$store.getters['getOffCanvasState']( this.target );
-                this.$store.dispatch('toggleOffCanvas', {target: this.target, open: !isVisible});
+                const isVisible = this.$store.getters['layout/offCanvasState']( this.target );
+                this.$store.dispatch('layout/toggleOffCanvas', { target: this.target, open: ! isVisible }, { root:true });
             }
         }
     }

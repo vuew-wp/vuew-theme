@@ -1,48 +1,47 @@
 <template>
-    <div>
-        <div class="vw-off-canvas-bar uk-box-shadow-small">
-            <slot></slot>
-        </div>
-        <off-canvas-toggle :target="target"
-                class="vw-off-canvas-overlay uk-position-top uk-position-fixed uk-width-1-1 uk-height-1-1"></off-canvas-toggle>
+    <div :is-visible="isVisible" :class="'vw-off-canvas-bar-' + target" class="vw-off-canvas-bar uk-box-shadow-small">
+        <slot></slot>
     </div>
 </template>
 <script>
 
-    import OffCanvasToggle from "./OffCanvasToggle";
-
     export default {
 
-        components: {
-            OffCanvasToggle
-        },
         props: {
             target: ""
         },
+
         mounted() {
-            this.$store.dispatch( 'toggleOffCanvas', { target: this.target, open: false } );
+            this.$store.dispatch( 'layout/addOffCanvas', { target: this.target, open: false }, { root: true } );
         },
+
         watch: {
             isVisible: function (visible) {
                 const bodyElem = document.body;
+                const cssClass = 'vw-off-canvas-open-' + this.target;
                 if (visible) {
-                    if (!bodyElem.classList.contains('vw-off-canvas-open')) {
-                        bodyElem.classList.add('vw-off-canvas-open');
+                    if (!bodyElem.classList.contains( cssClass ) ) {
+                        bodyElem.classList.add( cssClass );
                     }
                     return;
                 }
-                if (bodyElem.classList.contains('vw-off-canvas-open')) {
-                    bodyElem.classList.remove('vw-off-canvas-open');
-
+                if (bodyElem.classList.contains( cssClass ) ) {
+                    bodyElem.classList.remove( cssClass );
                 }
 
             }
         },
+
         computed: {
             isVisible: function () {
-                return this.$store.getters['getOffCanvasState']( this.target );
+                return this.$store.getters['layout/offCanvasState']( this.target );
             }
         }
+
     };
 
 </script>
+<style lang="less">
+    @import "../../../assets/less/base/vars";
+    @import "../../../assets/less/partials/off-canvas";
+</style>

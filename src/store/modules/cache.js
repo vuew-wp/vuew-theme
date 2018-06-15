@@ -5,15 +5,12 @@
  * @since   0.0.1
  */
 import Vue from 'vue';
+import { debug } from '../../debug';
 
-import { helpers } from "../../common/helpers";
 
 /**
- * Cache State
- *
- * @type {{queriesCache: {}, pathsCache: Array, postsCache: {}}}
- *
- * @since   0.0.1
+ * Cache State object
+ * @type {{excludeIds: Array, queriesCache: {}, pathsCache: Array, postsCache: {}, imagePaths: Array}}
  */
 const state = {
     excludeIds   : [],
@@ -42,7 +39,7 @@ const mutations = {
      */
     CACHE_ADD_POST: (state, post) => {
         Vue.set(state.postsCache, post.route.path, post);
-        console.log('CACHE_ADD_POST', state.postsCache);
+        debug.log( 'CACHE_ADD_POST', state.postsCache );
     },
     /**
      * Add route query to cache
@@ -55,7 +52,7 @@ const mutations = {
      */
     CACHE_ADD_QUERY: (state, query) => {
         Vue.set( state.queriesCache, query.path, query );
-        console.log('CACHE_ADD_QUERY', state.queriesCache);
+        debug.log('CACHE_ADD_QUERY', state.queriesCache);
     },
     /**
      * Update query post list, commonly used for pagination
@@ -70,19 +67,19 @@ const mutations = {
             ...args.posts
         ]);
         state.queriesCache[ args.path ].payload.post_count += args.posts.length;
-        console.log('CACHE_UPDATE_POST_LIST',state.queriesCache[ args.path ].payload.post_paths);
+        debug.log('CACHE_UPDATE_POST_LIST',state.queriesCache[ args.path ].payload.post_paths);
     },
 
     CACHE_ADD_404: (state, query) => {
         //Update queryIndex
         Vue.set( state.queriesCache, query.path, query );
-        console.log(state.queriesCache);
+        debug.log(state.queriesCache);
     },
 
     CACHE_ADD_IMAGE_PATH: (state, image) => {
         //Cache image path
-        console.log( state.imagePaths );
         state.imagePaths.push( image );
+        debug.log( 'CACHE_ADD_IMAGE_PATH', state.imagePaths );
     },
 
 

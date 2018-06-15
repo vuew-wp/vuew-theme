@@ -3,7 +3,7 @@
  */
 
 import {HTTP} from '../../common/http_proxy';
-
+import { debug } from '../../debug';
 import { helpers } from "../../common/helpers";
 
 /**
@@ -187,7 +187,7 @@ const actions = {
 
             })
             .catch(e => {
-                console.log(e);
+                debug.force(e);
                 store.commit("UPDATE_REQUEST_STATE", {loaded: true, pending: false});
             });
     },
@@ -196,15 +196,15 @@ const actions = {
 
         const currentQueriedObject = store.getters.getCurrentQueriedObject;
         const ppp = Vuew.config.query.ppp;
-        const PostCount = currentQueriedObject.payload.post_count;
-        const page = ( PostCount / ppp ) + 1;
+        const postCount = currentQueriedObject.payload.post_count;
+        const page = ( postCount / ppp ) + 1;
+        const extraParams = ppp === 1 ? '&offset=1' : '';
 
         let endPoint = helpers.getArchivePaginationEndpoint( currentQueriedObject );
-        //endPoint = endPoint + 'exclude=' + encodeURI( store.rootState.cache.excludeIds ) + '&';
 
         store.commit("PAGINATION_PENDING", true);
 
-        HTTP.get( endPoint + 'page=' + page + '&per_page=' + ppp /*+ '&orderby=date&order=desc'*/ )
+        HTTP.get( endPoint + 'page=' + page + '&per_page=' + ppp + extraParams /*+ '&orderby=date&order=desc'*/ )
             .then(response => {
 
                 store.dispatch('cache/updateQueryPostList', {
@@ -216,7 +216,7 @@ const actions = {
             })
             .catch(e => {
                 store.commit("PAGINATION_PENDING", false);
-                console.log(e)
+                console.log(e);
             });
     }
 

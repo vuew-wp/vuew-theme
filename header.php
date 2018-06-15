@@ -20,6 +20,10 @@
 
 	<?php wp_head(); ?>
 
+    <style id="vuew-app">
+    <?php echo file_get_contents(get_theme_file_path('dist/main.css')); ?>
+    </style>
+
     <!--<link rel="preload" href="https://fonts.googleapis.com/css?family=Noto+Sans" as="style">-->
 
     <!--https://github.com/filamentgroup/loadCSS/>
@@ -32,7 +36,7 @@
 </head>
 
 <body <?php body_class(); ?>>
-<link rel="preload" href="<?php echo get_theme_file_uri( 'dist/main.css' ); ?>" as="style">
+<!--<link rel="preload" href="<?php /*echo get_theme_file_uri( 'dist/main.css' ); */?>" as="style">-->
 <div style="position: absolute; top: 0; width: 100%; z-index: 0; font-family: Noto Sans,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,sans-serif;font-size: 16px;
     font-weight: 400;
     line-height: 1.5;">

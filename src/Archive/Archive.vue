@@ -4,9 +4,9 @@
             <div class="uk-width-1-2">
                 <h1 class="uk-h1" v-html="queryData.payload.name"></h1>
             </div>
-            <div class="uk-text-right uk-width-1-2">
-                <span v-html="queryData.payload.post_count + ' / ' + queryData.payload.found_posts"></span>
-            </div>
+            <!--<div class="uk-text-right uk-width-1-2">
+                <span class="vw-badge" v-html="queryData.payload.post_count + ' / ' + queryData.payload.found_posts"></span>
+            </div>-->
         </div>
         <div class="uk-width-1-1 uk-margin-bottom">
             <p v-html="queryData.payload.description"></p>

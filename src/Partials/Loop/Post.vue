@@ -1,11 +1,11 @@
 <template>
     <article :class="'uk-width-1-' + columns + '@m'" class="uk-margin-bottom vw-article">
         <router-link :to="setMenuItemParams" class="uk-float-left uk-width-1-1 uk-box-shadow-large uk-box-shadow-hover-small">
-            <Attachment :src="post.featured_media.thumbnail" :type="'background'" class="uk-height-small"></Attachment>
+            <Attachment :src="post.featured_media.thumbnail" :type="'background'" class="uk-height-small uk-position-relative"></Attachment>
             <div class="uk-padding">
                 <Title :theTitle="post.title" class="uk-article-title"></Title>
                 <p v-text="post.date"></p>
-                <Content :theContent="post.excerpt" class="uk-article-meta"></Content>
+                <div v-html="post.excerpt" class="uk-article-meta"></div>
             </div>
         </router-link>
     </article>

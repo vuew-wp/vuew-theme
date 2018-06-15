@@ -1,22 +1,19 @@
-<template>
-    <form>
-
-    </form>
-</template>
-
 <script>
+
+    /**
+     * Forms
+     */
+    import Form from "../Form/Form";
+    import userFormJSON from '../Form/user-login';
 
     export default {
 
-        components: {},
+        extends: Form,
 
-        props:[],
-
-        computed:{},
-
-        data(){
+        data() {
             return {
-                title: 'Loading...',
+                endPoint: 'user/login',
+                formData: userFormJSON
             }
         }
 

@@ -2,14 +2,13 @@
 
   &-bar {
     position: fixed;
-    top: 100px;
+    top: 0;
+    padding-top: 100px;
     bottom: 0;
-    width: @vw-pff-canvas-width;
+    width: @vw-off-canvas-width;
     z-index: 1;
-    left: -@vw-pff-canvas-width;
     background-color: @vw-color-lighter;
     overflow-x: hidden;
-    transform: translateX(0);
     transition: transform 0.4s;
 
   }
@@ -17,27 +16,59 @@
   &-overlay {
     height: 0;
     opacity: 0;
-    transition: height 0s, opacity 0.2s;
-    background-color: @vw-color-lighter;
+    transition: opacity 0.6s, height 0s;
+    background-color: @vw-color-darkest;
   }
 
-  //Toggles class on root component
-  &-open {
+  &-bar-userOffCanvas {
+    right: -@vw-off-canvas-width;
+  }
 
-    .vw-off-canvas-bar {
-      transform: translateX(100%);
-    }
+  &-bar-offCanvasMenu{
+    left: -@vw-off-canvas-width;
+  }
 
-    .vw-site-container {
-      transform: translateX(80%);
-      opacity: 0.6
-    }
+}
 
-    .vw-off-canvas-overlay {
-      height: 100%;
-      opacity: 0.6;
-    }
+//
+// Active Bars
+//
+// MENU
+.vw-off-canvas-open-offCanvasMenu{
+  .vw-off-canvas-bar-offCanvasMenu{
+    transform: translateX(100%);
+  }
+  .vw-site-container {
+    transform: translateX(@vw-off-canvas-width);
+    opacity: 0.6
+  }
+}
+// USER - REG
+.vw-off-canvas-open-userOffCanvas{
+  .vw-off-canvas-bar-userOffCanvas {
+    transform: translateX(-100%);
+  }
+  .vw-site-container {
+    transform: translateX(-@vw-off-canvas-width);
+    opacity: 0.6
+  }
+}
 
+//
+// Global
+//
+.vw-off-canvas-open-offCanvasMenu,
+.vw-off-canvas-open-userOffCanvas{
+
+  /*overflow: hidden;*/
+
+  .vw-off-canvas-overlay {
+    transition: height 0s, opacity 0.6s;
+    height: 100%;
+    opacity: 0.6;
+  }
+  .vw-site-container {
+    opacity: 0.6
   }
 }
 
@@ -51,21 +82,30 @@ main {
   display: block !important;
 }
 
-@media ( min-width: @breakpoint-medium ) {
+@media ( min-width: @vw-breakpoint-medium ) {
 
-  @vw-pff-canvas-width: 50%;
+  @vw-off-canvas-width: 50%;
 
-  .vw-off-canvas {
+  .vw-off-canvas-bar-userOffCanvas {
+    width: @vw-off-canvas-width;
+    right: -@vw-off-canvas-width;
+  }
 
-    &-bar {
-      width: @vw-pff-canvas-width;
-      left: -@vw-pff-canvas-width;
-    }
+  .vw-off-canvas-bar-offCanvasMenu{
+    width: @vw-off-canvas-width;
+    left: -@vw-off-canvas-width;
+  }
 
-    &-open {
-      .vw-site-container {
-        transform: translateX(@vw-pff-canvas-width);
-      }
+  .vw-off-canvas-open-offCanvasMenu{
+    .vw-site-container {
+      transform: translateX(@vw-off-canvas-width);
     }
   }
+  // USER - REG
+  .vw-off-canvas-open-userOffCanvas{
+    .vw-site-container {
+      transform: translateX(-@vw-off-canvas-width);
+    }
+  }
+
 }

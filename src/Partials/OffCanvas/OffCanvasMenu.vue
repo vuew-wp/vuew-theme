@@ -1,21 +1,21 @@
 <template>
         <off-canvas target="offCanvasMenu">
-            <nav-menu :menu="menu"></nav-menu>
+            <menu-tree :menu="menu"></menu-tree>
         </off-canvas>
 </template>
 <script>
 
-    import NavMenu from '../NavMenu/NavMenu.vue';
+    import MenuTree from '../Menu/MenuTree';
     import OffCanvas from "./OffCanvas";
 
     export default {
         components: {
             OffCanvas,
-            NavMenu
+            MenuTree
         },
         data() {
             return {
-                menu: Vuew.config.navigation.menus.primary_menu
+                menu: Vuew.config.navigation.menus.off_canvas
             };
         }
     };

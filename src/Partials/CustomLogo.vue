@@ -1,7 +1,7 @@
 <template>
     <router-link :to="setHomeRouteParams" exact>
-        <Attachment v-if="customLogo" :src="customLogo" style="width: 100px;"></Attachment>
-        <h1 v-else>{{ brandName }}</h1>
+        <Attachment :alt="brandName" v-if="customLogo" :src="customLogo"></Attachment>
+        <div style="width: 100px;" v-else v-html="require( '../svg/vuew-logo.svg' )"></div>
     </router-link>
 </template>
 
@@ -21,7 +21,7 @@
 
         data() {
             return {
-                brandName: 'VUEW',
+                brandName: 'VUEW - A VueJs and WordPress theme',
                 customLogo: false
             }
         },

@@ -3,7 +3,9 @@
 
         <PostVuew v-if="index <= offset" v-for="( post, index ) in getPosts" :key="post.path" :post="post" :columns="columns" />
 
-        <Pagination class="uk-grid uk-grid-collapse uk-width-1-1 uk-padding-remove uk-margin-remove" :posts="getPosts" type="LoadMore" :post-count="queryData.post_count" :found-posts="queryData.found_posts" :columns="columns" :offset="offset" elem-type="PostVuew"/>
+        <div class="uk-width-1-1">
+            <Pagination class="uk-grid uk-grid-collapse uk-padding-remove uk-margin-remove" :posts="getPosts" type="LoadMore" :post-count="queryData.post_count" :found-posts="queryData.found_posts" :columns="columns" :offset="offset" elem-type="PostVuew"/>
+        </div>
 
     </div>
 </template>

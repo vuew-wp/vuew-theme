@@ -44,11 +44,6 @@ import { store } from './store';
 import App from './App.vue';
 
 /**
- * Root App
- */
-import debug from './debug';
-
-/**
  * Instantiate Vue root component
  * @type {Vue}
  */
@@ -56,7 +51,4 @@ new Vue({
     router,
     store,
     render: h => h(App),
-    methods: {
-        ...debug
-    }
 }).$mount('#vuew-app');

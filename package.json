@@ -6,16 +6,14 @@
   "private": true,
   "scripts": {
     "dev": "cross-env VUEW_DEBUG=normal NODE_ENV=development webpack-dev-server --https --hot",
-    "dev:verbose": "cross-env VUEW_DEBUG=verbose NODE_ENV=development webpack-dev-server --https --hot",
+    "dev:v": "cross-env VUEW_DEBUG=verbose NODE_ENV=development webpack-dev-server --https --hot",
     "build": "cross-env VUEW_DEBUG=none NODE_ENV=production webpack --progress --hide-modules"
   },
   "dependencies": {
-    "@wordpress/hooks": "^1.1.6",
     "axios": "^0.16.1",
     "uikit": "^3.0.0-beta.42",
     "vue": "^2.5.9",
     "vue-router": "^3.0.1",
-    "vue-select": "^2.4.0",
     "vuex": "^2.2.1"
   },
   "devDependencies": {
@@ -30,10 +28,14 @@
     "css-loader": "^0.28.11",
     "extract-text-webpack-plugin": "^3.0.2",
     "file-loader": "^1.1.5",
+    "glob-all": "^3.1.0",
     "html-loader": "^0.5.5",
     "less": "^2.7.3",
     "less-loader": "^4.1.0",
     "optimize-css-assets-webpack-plugin": "^3.2.0",
+    "purgecss-webpack-plugin": "^1.2.0",
+    "purify-css": "^1.2.5",
+    "purifycss-webpack": "^0.7.0",
     "style-loader": "^0.20.3",
     "vue-loader": "^13.5.0",
     "vue-template-compiler": "^2.5.9",

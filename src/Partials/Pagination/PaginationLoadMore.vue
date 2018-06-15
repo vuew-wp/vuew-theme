@@ -1,6 +1,5 @@
 <template>
     <div>
-
         <component :is="elemType" v-if="index > offset" v-for="( newPost, index ) in posts" :key="newPost.path" :post="newPost" :columns="columns">
             <p v-html="'Thing I want to say'"></p>
             <div class="uk-alert" v-if="index % columns === 0">THIS IS my alert</div>
@@ -11,9 +10,11 @@
             </div>
         </div>
 
-        <button v-if="postCount < foundPosts" @click="loadPosts" class="uk-button uk-button-primary uk-width-1-1">
-            {{ isPending ? 'Pending...' : 'Load More' }} / ( {{ postCount }} / {{ foundPosts }} )
-        </button>
+        <div class="uk-width-1-1">
+            <button v-if="postCount < foundPosts" @click="loadPosts" class="uk-button uk-button-primary uk-width-1-1">
+                {{ isPending ? 'Pending...' : 'Load More' }} / ( {{ postCount }} / {{ foundPosts }} )
+            </button>
+        </div>
 
     </div>
 </template>

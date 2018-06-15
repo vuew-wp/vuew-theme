@@ -1,17 +1,16 @@
 <template>
-    <fieldset v-if="field.type === 'text' || field.type === 'email' || field.type === 'password'">
-        <input :type="field.type" :name="field.Id" v-on:change="validate( $event.target.value, field )">
-    </fieldset>
-    <!--<fieldset v-else-if="field.type === 'text'">
-        <input :type="field.type" v-on:change="validate( $event, field )">
-    </fieldset>-->
+    <div :class="inputStateChangeClass" class="uk-margin-bottom">
+        <label class="uk-form-label" v-if="field.label" :for="'vw-form-field-' + field.id" v-html="field.label"></label>
+        <input class="uk-input" :type="field.type" :placeholder="field.placeholder" :name="field.id"
+               :id="'vw-form-field-' + field.id"
+               v-on:input="validate( $event.target.value, field )" v-on:focus="touched = true">
+        <span v-if="field.desc" v-html="field.desc" class="uk-text-small"></span>
+    </div>
 </template>
 
 <script>
 
     import formFields from './form-field-types';
-
-    import _ from 'lodash';
 
     export default {
 
@@ -20,29 +19,48 @@
         ],
         data() {
             return {
-                json: {}
+                json: {},
+                valid: false,
+                touched: false
             }
         },
         mounted(){
-            this.json = _.merge( formFields[ this.field.type ], this.field );
+            this.json = Object.assign( {}, formFields[ this.field.type ], this.field );
+        },
+        computed: {
+            inputStateChangeClass() {
+
+                const vm = this;
+
+                if( ! this.field.required || ! vm.touched ){
+                    return '';
+                }
+                if( vm.valid ){
+                    return 'uk-form-success';
+                }
+                return 'uk-form-danger';
+
+            }
         },
         methods:{
-            validate(value, field){
+            validate( value, field ){
+
                 const vm = this;
-                //@todo replace with try catch
-                const validateMethod = this.json[ 'validate_callback' ];
-                if( vm[ validateMethod ]( value ) ) {
-                    this.$emit( 'change', { value: value, id: field.id } );
-                }
+                const validateMethod = vm.json[ 'validate_callback' ];
+
+                this.$emit( 'input', {
+                    value: value,
+                    id: field.id,
+                    valid: vm[ validateMethod ]( value )
+                } );
             },
-            validateText( value ){
-                return true;
+            validText( value ){
+                this.valid = '' !== value;
+                return this.valid;
             },
-            validatePassword( value ){
-                return true;
-            },
-            validateEmail( value ){
-                return true;
+            validEmail( value ){
+                this.valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test( value );
+                return this.valid;
             }
         }
     }

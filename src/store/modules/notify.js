@@ -1,13 +1,10 @@
 /**
- * Import Vue
- * used for setting object keys and maintaining reactivity.
+ * Notify
  *
  * @since   0.0.1
  */
-import Vue from 'vue';
 
 const state = {
-    /** Holds the query stacktrace */
     routeChange         : '',
     routeChangeVerbose  : ''
 };
@@ -15,7 +12,6 @@ const state = {
 const mutations = {
     ADD_NOTIFICATION: (state, msg) => {
         state.routeChange = msg;
-        //Vue.set( state, 'routeChange',  msg );
     }
 };
 
@@ -30,7 +26,7 @@ const actions = {
 };
 
 const getters = {
-    getNotifications: ( state, getters ) => {
+    getNotifications: ( state ) => {
         return state.routeChange;
     }
 };

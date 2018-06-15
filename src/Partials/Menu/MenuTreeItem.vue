@@ -3,7 +3,7 @@
     <anchor :menu="menu" :class="{ 'uk-parent' : menu.children }">
 
         <ul v-if="menu.children">
-            <nav-menu-item class="item" v-for="item in menu.children" :key="item.path" :menu="item"></nav-menu-item>
+            <menu-tree-item class="item" v-for="item in menu.children" :key="item.path" :menu="item"></menu-tree-item>
         </ul>
 
     </anchor>
@@ -15,12 +15,12 @@
     import Anchor from '../../Proxy/Anchor';
 
     export default {
-        name: 'nav-menu-item',
+        name: 'menu-tree-item',
         props: [
             'menu'
         ],
         components: {
-            'anchor': Anchor
+            Anchor
         }
     }
 </script>
