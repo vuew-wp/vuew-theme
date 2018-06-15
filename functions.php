@@ -15,7 +15,6 @@ use Vuew\Core\REST;
 use Vuew\functions;
 
 const VER = '0.0.2';
-const ENV = 'prod';
 
 /** URL & Path to theme */
 define( __NAMESPACE__ . '\DIR', trailingslashit( get_template_directory() ) );
@@ -28,12 +27,15 @@ define( __NAMESPACE__ . '\URL', trailingslashit( get_template_directory_uri() ) 
 require_once( DIR . 'includes/functions/utilities.php' );
 require_once( DIR . 'includes/functions/core.php' );
 require_once( DIR . 'includes/functions/rest.php' );
-require_once( DIR . 'includes/functions/boot.php' );
 
 //Classes
 require_once( DIR . 'includes/classes/Factory.php' );
 require_once( DIR . 'includes/classes/Menu.php' );
 require_once( DIR . 'includes/classes/REST.php' );
+require_once( DIR . 'includes/classes/Boot.php' );
+
+require_once( DIR . 'includes/functions/boot.php' );
+
 REST::create();
 
 add_filter('jpeg_quality', function(){
@@ -72,10 +74,10 @@ function vuew_assets() {
 
 	wp_dequeue_script( 'jquery' );
 
-	if ( 'dev' === ENV ) {
+	if ( WP_DEBUG ) {
 		wp_enqueue_script( 'vuew', 'https://localhost:8080/dist/main.js', [], VER, true );
 	}
-	if ( 'prod' === ENV ) {
+	else {
 		/** JS */
 		wp_enqueue_script( 'vuew-vendor', URL . 'dist/vendor.js', [], VER, true );
 		wp_enqueue_script( 'vuew', URL . 'dist/main.js', [ 'vuew-vendor' ], VER, true );

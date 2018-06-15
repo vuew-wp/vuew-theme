@@ -23,21 +23,17 @@
     <!--<link rel="preload" href="https://fonts.googleapis.com/css?family=Noto+Sans" as="style">-->
     <link rel="preload" href="<?php echo get_theme_file_uri( 'dist/main.css' ); ?>" as="style">
 
-
     <!--https://github.com/filamentgroup/loadCSS/>
 <link rel="preload" href="https://fonts.googleapis.com/css?family=Noto+Sans" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <link rel="preload" href="<?php /*echo get_theme_file_uri( 'dist/main.css' ); */?>" as="style" onload="this.onload=null;this.rel='stylesheet'">-->
 
     <style>
-        body {
-            margin: 0;
-        }
+        body {margin: 0;}
     </style>
 </head>
 
 <body <?php body_class(); ?>>
-
-<div style="position: absolute; top: 0; width: 100%; z-index: 0; font-family: Noto Sans,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,sans-serif;font-size: 16px;
+<div style="display:none; position: absolute; top: 0; width: 100%; z-index: 0; font-family: Noto Sans,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,sans-serif;font-size: 16px;
     font-weight: 400;
     line-height: 1.5;">
     <header style="z-index: 2;
@@ -113,17 +109,6 @@
                     </g> </svg>
             </div>
         </a>
-
-        <div style="float: right; padding-right: 15px">
-            <a style="font-family: sans-serif;
-			color: #15a9d1;
-			line-height: 100px;">MENU</a><span style="
-    -webkit-text-size-adjust: 100%;
-    background: #fff;
-    color: #666;"> / </span><a style="font-family: sans-serif;
-			color: #15a9d1;
-			line-height: 100px;">USER</a>
-        </div>
     </header>
     <ul style="margin: 0 0 20px; background-color:#15a9d1; z-index: 0">
         <li style="list-style: none;

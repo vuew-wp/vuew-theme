@@ -2,6 +2,7 @@
 
 namespace Vuew\functions\boot;
 
+use Vuew\Core\Boot;
 use Vuew\functions;
 
 /**
@@ -11,6 +12,8 @@ function object(){
 
 	$initial_object_type = [];
 	$queried_object = get_queried_object();
+
+	$boot = new Boot( $queried_object );
 
 	//Single Post Type
 	if ( is_single() || is_singular() ) {
@@ -30,6 +33,7 @@ function object(){
 	}
 
 	if( is_front_page() || is_home() ){
+		/** not static home page */
 		if(is_home()) {
 			$initial_object_type = [
 				'id'         => 0,
@@ -38,6 +42,9 @@ function object(){
 			];
 		}
 		$initial_object_type[ 'type' ] = 'home';
+
+		/** @var array $initial_object_type - Get a couple posts to load without a HTTP request */
+		$initial_object_type = $boot->home( $initial_object_type );
 	}
 
 	if( is_404() ){
@@ -56,6 +63,7 @@ function object(){
 			'rest_base'  => $queried_object->rest_base
 		];
 	}
+
 
 	$current_uri = parse_url( vw_get_requested_uri() );
 	$initial_object_type[ 'path' ] = isset( $current_uri['path'] ) ? $current_uri['path'] : '/';

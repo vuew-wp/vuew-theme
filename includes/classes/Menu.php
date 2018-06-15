@@ -71,7 +71,10 @@ class Menu extends Factory {
 
 					/** Unless url is '/' lets remove the last slash from the URL. */
 					$v->url = '/' !== $v->url ? untrailingslashit( $v->url ) : '/';
-					$path   = trim( parse_url( $v->url )['path'], '/' );
+
+					/** @var  $path */
+					$path = parse_url( $v->url );
+					$path   = isset( $path['path'] ) ? trim( $path['path'], '/' ) : '/';
 
 					$slug_pieces = explode( '/', $path );
 
@@ -152,11 +155,11 @@ class Menu extends Factory {
 						}
 
 
-					} else {
+					} else if ( $v->type !== 'post_type_archive' ) {
 						$v->rest_base = \Vuew\REST_BASES[ $v->type ][ $v->object ];
 					}
 
-					if ( $v->type === 'post_type_archive' ) {
+					else {
 						$v->id        = 0;
 						$v->rest_base = \Vuew\REST_BASES['post_type'][ $v->object ];
 					}

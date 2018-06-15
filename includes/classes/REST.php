@@ -180,12 +180,17 @@ class REST extends Factory {
 			$_data[ $field ] = $data->data[ $field ];
 		}
 
+		/**
+		 * WP_Query returns 'ID' and API uses 'id'
+		 */
+		$p_id = $data->data['id'] ?? $data->data['ID'];
+
 		$_data['route'] = [
 			'type'        => 'post_type',
 			'rest_base'   => \Vuew\REST_BASES['post_type'][ $data->data['type'] ],
 			'type_value'  => $data->data['type'],
 			'breadcrumbs' => vw_make_bread( $data->data['link'] ),
-			'path'        => untrailingslashit( parse_url( get_permalink( $data->data['ID'] ) )['path'] )
+			'path'        => untrailingslashit( parse_url( get_permalink( $p_id ) )['path'] )
 		];
 
 		$data->data = $_data;
@@ -282,7 +287,6 @@ class REST extends Factory {
 
 			$_data['post_count']  = $query->post_count;
 			$_data['found_posts'] = (int) $query->found_posts;
-			$_data['whole'] = $query;
 
 			foreach ( $query->posts as $p ) {
 				/** @var int $attachment_id */
