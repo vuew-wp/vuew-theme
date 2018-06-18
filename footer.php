@@ -38,7 +38,7 @@
 
 <?php wp_footer(); ?>
 
-<script>
+<script defer>
     <?php if( ! WP_DEBUG ) : ?>
         <?php echo file_get_contents( get_theme_file_path('dist/vendor.js') ); ?>
         <?php echo file_get_contents( get_theme_file_path('dist/main.js') ); ?>
