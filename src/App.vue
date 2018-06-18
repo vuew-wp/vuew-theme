@@ -6,7 +6,13 @@
         <menu-top-level></menu-top-level>
 
         <div class="vw-site-container">
-            <loop-above-the-fold :first-load="firstLoad" v-if="!pending && isArchive"></loop-above-the-fold>
+            <div class="uk-padding">
+                <h2>VUEW, a WordPress and VueJS powered theme.</h2>
+                <p>
+                    With the speed of VueJS and the flexibility of WordPress VUEW is a beautifully presented highly performanent theme.
+                </p>
+            </div>
+            <loop-above-the-fold :first-load="firstLoad"></loop-above-the-fold>
             <transition name="vw-fade-transition">
                 <vw-template v-if="!pending" :query="query"></vw-template>
             </transition>
