@@ -6,5 +6,11 @@ export const getters = {
             }
             return state.currentPath.replace(/\/$/, "");
         }
+    },
+    isFirstLoad: ( state ) => {
+        return state.firstLoad;
+    },
+    isArchive: ( state ) => {
+        return state.isArchive;
     }
 };

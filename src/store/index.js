@@ -5,7 +5,6 @@ import Vuex from 'vuex'
  * Root store
  * Manages and maintains root state management
  */
-import * as state from './state'
 import { actions } from './actions'
 import { getters }  from './getters'
 import { mutations } from './mutations'
@@ -29,7 +28,11 @@ Vue.use( Vuex );
  * @type {Vuex.Store}
  */
 export const store =  new Vuex.Store({
-    state,
+    state: {
+        currentPath : '',
+        firstLoad: null,
+        isArchive: null
+    },
     actions,
     getters,
     mutations,

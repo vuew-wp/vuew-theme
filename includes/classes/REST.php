@@ -254,7 +254,8 @@ class REST extends Factory {
 
 		static::query( $data->data, [
 			'post_type'      => $params['type'],
-			'posts_per_page' => get_option( 'posts_per_page' )
+			'posts_per_page' => get_option( 'posts_per_page' ),
+			'offset' => 1
 		] );
 
 		return $data;

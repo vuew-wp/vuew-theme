@@ -5,9 +5,8 @@
 
         <menu-top-level></menu-top-level>
 
-        <loop-above-the-fold></loop-above-the-fold>
-
         <div class="vw-site-container">
+            <loop-above-the-fold :first-load="firstLoad" v-if="!pending && isArchive"></loop-above-the-fold>
             <transition name="vw-fade-transition">
                 <vw-template v-if="!pending" :query="query"></vw-template>
             </transition>
@@ -63,23 +62,12 @@
         data() {
             return {
                 pending: false,
-                firstLoad: true
+                firstLoad: null,
+                isArchive: null
             }
         },
         mounted: function () {
             this.dispatchNavigation(this.$store, Vuew.config.boot);
-
-            /*const x = document.createElement("link");
-            const y = document.getElementsByTagName("script")[0];
-            x.rel = "stylesheet";
-            x.href = "https://fonts.googleapis.com/css?family=Noto+Sans";
-            y.parentNode.insertBefore(x, y);*/
-
-           /* const xx = document.createElement("link");
-            const yy = document.getElementsByTagName("script")[0];
-            xx.rel = "stylesheet";
-            xx.href = Vuew.config.css;
-            yy.parentNode.insertBefore(xx, yy);*/
         },
         watch: {
             '$route'(to, from) {
@@ -97,12 +85,21 @@
                 });
 
             },
-            query: function () {
+            query: function ( data ) {
+
                 const vm = this;
-                if( vm.firstLoad ){
-                    console.log("first load");
-                    vm.firstLoad = vm.pending = false;
+                vm.$store.dispatch('toggleIsArchive', data.isArchive );
+                vm.isArchive = data.isArchive;
+
+                const isFirstLoad = vm.$store.getters['isFirstLoad'];
+                if( null === isFirstLoad ){
+                    vm.$store.dispatch('toggleFirstLoad', true );
+                    vm.firstLoad = true;
+                    vm.pending = false;
                     return;
+                } else if( isFirstLoad ) {
+                    vm.$store.dispatch('toggleFirstLoad', false );
+                    vm.firstLoad = false;
                 }
                 vm.pending = true;
                 if (vm.$store.getters['query/isLoaded']) {

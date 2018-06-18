@@ -57,12 +57,9 @@
         },
         methods: {
             truncate: function ( string, count = 5, sliceFrom = 'start') {
+
                 if ( !string ) return '';
 
-                /**
-                 * Since we're working with arrays and 0 index
-                 */
-                    //const wordCount = count - 1;
                 let stringPieces = string.split(' ');
 
                 if( count > stringPieces.length )
@@ -73,7 +70,6 @@
                     return stringPieces.join( ' ' ) + '...';
                 }
                 if( 'end' === sliceFrom ){
-                    //count = count - 1;
                     stringPieces = stringPieces.slice( count, count + count );
                     return stringPieces.join(' ');
                 }

@@ -198,13 +198,12 @@ const actions = {
         const ppp = Vuew.config.query.ppp;
         const postCount = currentQueriedObject.payload.post_count;
         const page = ( postCount / ppp ) + 1;
-        const extraParams = ppp === 1 ? '&offset=1' : '';
 
         let endPoint = helpers.getArchivePaginationEndpoint( currentQueriedObject );
 
         store.commit("PAGINATION_PENDING", true);
 
-        HTTP.get( endPoint + 'page=' + page + '&per_page=' + ppp + extraParams /*+ '&orderby=date&order=desc'*/ )
+        HTTP.get( endPoint + 'page=' + page + '&per_page=' + ppp /*+ '&orderby=date&order=desc'*/ )
             .then(response => {
 
                 store.dispatch('cache/updateQueryPostList', {

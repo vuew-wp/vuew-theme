@@ -77,27 +77,18 @@ function vuew_assets() {
 	if ( WP_DEBUG ) {
 		wp_enqueue_script( 'vuew', 'https://localhost:8080/dist/main.js', [], VER, true );
 	}
-	else {
-		/** JS */
-		//wp_enqueue_script( 'vuew-vendor', URL . 'dist/vendor.js', [], VER, true );
-		//wp_enqueue_script( 'vuew', URL . 'dist/main.js', [ 'vuew-vendor' ], VER, true );
-		/** CSS */
-		//wp_enqueue_style( 'vuew', URL . 'dist/main.css', [], VER );
-	}
 
-	if ( false === ( $vuew_boot_json = get_transient( 'vuew_boot_json' ) ) ) {
+	$vuew_config = get_transient( 'vuew_config' );
+
+	if ( WP_DEBUG || false === $vuew_config ) {
 
 		/** @var array $routing */
 		$routing = Menu::routing();
 
 		/** @var array $vuew_json_config */
-		$vuew_json_config = [
+		$vuew_config = [
 			'restRoot' => rest_url(),
 			'baseUrl'  => home_url(),
-			'nonces'   => [
-				'main'     => wp_create_nonce( 'wp_rest' ),
-				'userAuth' => wp_create_nonce( 'vuew_user_auth' )
-			],
 			'config'   => apply_filters( 'Vuew\json', [
 				'customLogo'  => false,
 				'pageOnFront' => (int) get_option( 'page_on_front' ),
@@ -134,21 +125,25 @@ function vuew_assets() {
 			$custom_logo_id = get_theme_mod( 'custom_logo' );
 			$logo           = wp_get_attachment_image_src( $custom_logo_id, 'full' );
 
-			$vuew_json_config['config']['customLogo'] = $logo[0];
+			$vuew_config['config']['customLogo'] = $logo[0];
 		}
 
-		$vuew_boot_json = apply_filters( __FUNCTION__, $vuew_json_config );
-
-		set_transient( 'vuew_boot_json', $vuew_json_config, MINUTE_IN_SECONDS );
+		/** Two minute transient */
+		set_transient( 'vuew_config', $vuew_config, MINUTE_IN_SECONDS * 2 );
 
 	}
 
-	$vuew_boot_json['config']['boot'] = functions\boot\object();
-	$vuew_boot_json['config']['css']  = get_theme_file_uri( 'dist/main.css' );
-
+	/**
+     * The following must not be stored in transient
+     */
+	$vuew_config['nonces']   = [
+		'main'     => wp_create_nonce( 'wp_rest' ),
+		'userAuth' => wp_create_nonce( 'vuew_user_auth' )
+	];
+	$vuew_config['config']['boot'] = functions\boot\object();
 	?>
 	<script>
-		var Vuew = <?php echo json_encode($vuew_boot_json);?>;
+		var Vuew = <?php echo json_encode( $vuew_config );?>;
 	</script>
 	<?php
 

@@ -39,8 +39,10 @@
 <?php wp_footer(); ?>
 
 <script>
-    <?php echo file_get_contents( get_theme_file_path('dist/vendor.js') ); ?>
-    <?php echo file_get_contents( get_theme_file_path('dist/main.js') ); ?>
+    <?php if( ! WP_DEBUG ) : ?>
+        <?php echo file_get_contents( get_theme_file_path('dist/vendor.js') ); ?>
+        <?php echo file_get_contents( get_theme_file_path('dist/main.js') ); ?>
+    <?php endif; ?>
    /* wp.hooks.addFilter('myTestFilter', function (query) {
         //query.payload.collection = 'poo';
         return query;
