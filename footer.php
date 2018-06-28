@@ -6,10 +6,10 @@
 ?>
 
 <noscript>
-	<div id="content" class="site-content">
-		<div class="uk-grid">
+    <div id="content" class="site-content">
+        <div class="uk-grid">
 
-            <?php
+			<?php
 
 			if ( have_posts() ) {
 
@@ -32,32 +32,30 @@
 			}
 
 			?>
-		</div>
-	</div>
+        </div>
+    </div>
 </noscript>
 
 <?php wp_footer(); ?>
 
 <script defer>
-    <?php if( ! WP_DEBUG ) : ?>
-        <?php echo file_get_contents( get_theme_file_path('dist/vendor.js') ); ?>
-        <?php echo file_get_contents( get_theme_file_path('dist/main.js') ); ?>
-    <?php endif; ?>
-   /* wp.hooks.addFilter('myTestFilter', function (query) {
-        //query.payload.collection = 'poo';
-        return query;
-    });*/
-   /*if ('serviceWorker' in navigator) {
-       window.addEventListener('load', function() {
-           navigator.serviceWorker.register(" //echo get_theme_file_uri('sw.js'); ?>').then(function(registration) {
-               // Registration was successful
-               console.log('ServiceWorker registration successful with scope: ', registration.scope);
-           }, function(err) {
-               // registration failed :(
-               console.log('ServiceWorker registration failed: ', err);
-           });
-       });
-   }*/
+    //<![CDATA[
+	<?php if( ! WP_DEBUG ) : ?>
+        <?php echo file_get_contents( get_theme_file_path( 'dist/vendor.js' ) ); ?>
+        <?php echo file_get_contents( get_theme_file_path( 'dist/main.js' ) ); ?>
+	<?php endif; ?>
+    //]]>
+    /*if ('serviceWorker' in navigator) {
+		window.addEventListener('load', function() {
+			navigator.serviceWorker.register(" //echo get_theme_file_uri('sw.js'); ?>').then(function(registration) {
+				// Registration was successful
+				console.log('ServiceWorker registration successful with scope: ', registration.scope);
+			}, function(err) {
+				// registration failed :(
+				console.log('ServiceWorker registration failed: ', err);
+			});
+		});
+	}*/
 </script>
 
 </body>

@@ -14,7 +14,7 @@ use Vuew\Core\Menu;
 use Vuew\Core\REST;
 use Vuew\functions;
 
-const VER = '0.0.2';
+const VER = '0.0.3';
 
 /** URL & Path to theme */
 define( __NAMESPACE__ . '\DIR', trailingslashit( get_template_directory() ) );
@@ -129,7 +129,7 @@ function vuew_assets() {
 		}
 
 		/** Two minute transient */
-		set_transient( 'vuew_config', $vuew_config, MINUTE_IN_SECONDS * 2 );
+		set_transient( 'vuew_config', $vuew_config, MINUTE_IN_SECONDS * 5 );
 
 	}
 
@@ -143,7 +143,9 @@ function vuew_assets() {
 	$vuew_config['config']['boot'] = functions\boot\object();
 	?>
 	<script>
+        //<![CDATA[
 		var Vuew = <?php echo json_encode( $vuew_config );?>;
+        //]]>
 	</script>
 	<?php
 
