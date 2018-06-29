@@ -43,15 +43,6 @@
     <?php if( ! WP_DEBUG ) : ?>
         <?php echo file_get_contents( get_theme_file_path( 'dist/vendor.js' ) ); ?>
         <?php echo file_get_contents( get_theme_file_path( 'dist/main.js' ) ); ?>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-121620171-1"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-
-        gtag('config', 'UA-121620171-1');
-    </script>
 <?php endif; ?>
     //]]>
     /*if ('serviceWorker' in navigator) {
@@ -65,6 +56,15 @@
 			});
 		});
 	}*/
+</script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-121620171-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-121620171-1');
 </script>
 
 </body>
