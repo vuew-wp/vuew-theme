@@ -45,6 +45,8 @@
         <?php echo file_get_contents( get_theme_file_path( 'dist/main.js' ) ); ?>
 <?php endif; ?>
     //]]>
+</script>
+<script>
     /*if ('serviceWorker' in navigator) {
 		window.addEventListener('load', function() {
 			navigator.serviceWorker.register(" //echo get_theme_file_uri('sw.js'); ?>').then(function(registration) {
