@@ -3,19 +3,16 @@
 
         <vw-header></vw-header>
 
-        <menu-top-level></menu-top-level>
-
         <div class="vw-site-container">
-            <div class="uk-padding">
-                <h2>VUEW, a WordPress and VueJS powered theme.</h2>
-                <p>
-                    With the speed of VueJS and the flexibility of WordPress VUEW is a beautifully presented highly performanent theme.
-                </p>
-            </div>
-            <loop-above-the-fold :first-load="firstLoad"></loop-above-the-fold>
+
+            <menu-top-level></menu-top-level>
+
+            <loop-above-the-fold v-if="firstLoad || ! pending" :above-the-fold-query="aboveTheFoldQuery"></loop-above-the-fold>
+
             <transition name="vw-fade-transition">
                 <vw-template v-if="!pending" :query="query"></vw-template>
             </transition>
+
         </div>
 
         <!--<pre-loader v-show="!isLoaded"></pre-loader>-->
