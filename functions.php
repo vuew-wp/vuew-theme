@@ -85,6 +85,8 @@ function vuew_assets() {
 		/** @var array $routing */
 		$routing = Menu::routing();
 
+		$ppp = (int) get_query_var( 'posts_per_page', 6 );
+
 		/** @var array $vuew_json_config */
 		$vuew_config = [
 			'restRoot' => rest_url(),
@@ -102,13 +104,39 @@ function vuew_assets() {
 					'can_register' => (int) get_option( 'users_can_register' )
 				],
 				'query'       => [
-					'ppp' => (int) get_query_var( 'posts_per_page', 6 )
+					'ppp' => $ppp
 				],
 				'layout'      => [
 					'archives' => [
 						'home'              => [
 							'columns' => 3,
-							'type'    => 'post-vuew'
+							'type'    => 'post-vuew',
+                            /** Above the fold */
+							'atf' => [
+								[
+									'postsPerComponent' => 2,
+									'name'                => 'post-list-overflow'
+								],
+								[
+									'title' => 'Other News',
+									'postsPerComponent' => 3,
+									'name'                => 'post-list',
+									'columns'             => [
+										1
+									]
+								]
+							],
+							/** Below the fold */
+							'btf' => [
+								[
+									'postsPerComponent' => $ppp,
+									'name'                => 'post-list-expander',
+									'columns'             => [
+										1,
+										3
+									]
+								]
+							]
 						],
 						'post_type_archive' => [
 							'columns' => 2
