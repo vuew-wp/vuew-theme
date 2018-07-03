@@ -91,8 +91,7 @@ function vuew_assets() {
 		$vuew_config = [
 			'restRoot' => rest_url(),
 			'baseUrl'  => home_url(),
-			'config'   => apply_filters( 'Vuew\json', [
-				'customLogo'  => false,
+			'config'   => [
 				'pageOnFront' => (int) get_option( 'page_on_front' ),
 				'navigation'  => [
 					'menus'     => $routing['menus'],
@@ -100,9 +99,11 @@ function vuew_assets() {
 					'restBases' => REST_BASES
 				],
 				'user'        => [
-					'is_logged_in' => is_user_logged_in(),
 					'can_register' => (int) get_option( 'users_can_register' )
 				],
+                'tracking' => [
+                    'googleAnalytics' => 'UA-121620171-1'
+                ],
 				'query'       => [
 					'ppp' => $ppp
 				],
@@ -115,13 +116,19 @@ function vuew_assets() {
 							'atf' => [
 								[
 									'postsPerComponent' => 2,
-									'name'                => 'post-list-overflow'
+									'name'                => 'post-list-overflow',
+									'options'           => [
+										'excerpt' => true,
+									],
 								],
 								[
-									'title' => 'Other News',
+									'title'             => 'Other News',
 									'postsPerComponent' => 3,
-									'name'                => 'post-list',
-									'columns'             => [
+									'name'              => 'post-list',
+									'options'           => [
+										'excerpt' => true,
+									],
+									'columns'           => [
 										1
 									]
 								]
@@ -142,11 +149,21 @@ function vuew_assets() {
 							'columns' => 2
 						],
 						'taxonomy'          => [
-							'columns' => 4
+							'columns' => 4,
+							'atf' => [
+								[
+									'title' => 'Other News',
+									'postsPerComponent' => 5,
+									'name'                => 'post-list',
+									'columns'             => [
+										1
+									]
+								]
+							],
 						]
 					]
 				]
-			] )
+			]
 		];
 
 		if ( has_custom_logo() ) {
@@ -157,7 +174,7 @@ function vuew_assets() {
 		}
 
 		/** Two minute transient */
-		set_transient( 'vuew_config', $vuew_config, MINUTE_IN_SECONDS * 5 );
+		set_transient( 'vuew_config', $vuew_config, MINUTE_IN_SECONDS * 2 );
 
 	}
 
@@ -168,6 +185,7 @@ function vuew_assets() {
 		'main'     => wp_create_nonce( 'wp_rest' ),
 		'userAuth' => wp_create_nonce( 'vuew_user_auth' )
 	];
+	$vuew_config['config']['user']['is_logged_in'] = is_user_logged_in();
 	$vuew_config['config']['boot'] = functions\boot\object();
 	?>
 	<script>
