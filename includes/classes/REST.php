@@ -148,7 +148,8 @@ class REST extends Factory {
 					continue;
 				}
 				if( $field === 'excerpt' ){
-					$_data[ $field ] = always_excerpt( $data->data[ 'content' ]['rendered'], $data->data[ 'excerpt' ]['rendered'] );
+					$excerpt = isset( $data->data[ 'excerpt' ] ) ? $data->data[ 'excerpt' ]['rendered'] : '';
+					$_data[ $field ] = always_excerpt( $data->data[ 'content' ]['rendered'], $excerpt );
 					continue;
 				}
 				$_data[ $field ] = $data->data[ $field ]['rendered'];
@@ -254,8 +255,7 @@ class REST extends Factory {
 
 		static::query( $data->data, [
 			'post_type'      => $params['type'],
-			'posts_per_page' => get_option( 'posts_per_page' ),
-			'offset' => 1
+			'posts_per_page' => get_option( 'posts_per_page' )
 		] );
 
 		return $data;
