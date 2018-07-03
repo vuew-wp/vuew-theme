@@ -80,7 +80,7 @@ function vuew_assets() {
 
 	$vuew_config = get_transient( 'vuew_config' );
 
-	if ( WP_DEBUG || false === $vuew_config ) {
+	if ( WP_DEBUG || isset( $_GET['transient_cache_bypass'] ) || false === $vuew_config ) {
 
 		/** @var array $routing */
 		$routing = Menu::routing();
