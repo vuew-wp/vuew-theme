@@ -20,11 +20,10 @@
 
 	<?php wp_head(); ?>
 
-    <style>
-        <?php echo file_get_contents( get_theme_file_path('dist/main.css') ); ?>
-    </style>
-
 </head>
 
 <body <?php body_class(); ?>>
+<style>
+    <?php echo file_get_contents( get_theme_file_path('dist/main.css') ); ?>
+</style>
 <?php //get_template_part( 'partials/header.php' );
