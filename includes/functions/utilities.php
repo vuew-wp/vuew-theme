@@ -66,4 +66,4 @@ function always_excerpt( $content, $excerpt = '' ){
 	return nl2br( $text );
 }
 
-remove_filter ('the_excerpt', 'wpautop');
+remove_filter ('the_excerpt', 'wpautop' );

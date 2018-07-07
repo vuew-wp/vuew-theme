@@ -5,11 +5,14 @@
 
 ?>
 
-<?php wp_footer(); ?>
-
-<?php if ( ! WP_DEBUG ) : ?>
+<script defer>
+	//<![CDATA[
+	var Vuew = <?php echo \Vuew\functions\boot\vw_json();?>;
+	//]]>
+</script>
+	<?php if ( ! WP_DEBUG ) : ?>
     <script defer>
-		//<![CDATA[
+        //<![CDATA[
 		<?php echo file_get_contents( get_theme_file_path( 'dist/vendor.js' ) ); ?>
 		<?php echo file_get_contents( get_theme_file_path( 'dist/main.js' ) ); ?>
 		//]]>
@@ -41,6 +44,8 @@
 		gtag( 'config', 'UA-121620171-1' );
     </script>
 <?php endif; ?>
+
+<?php wp_footer(); ?>
 
 </body>
 </html>
