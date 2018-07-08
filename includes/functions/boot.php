@@ -149,6 +149,9 @@ function vw_json(){
 					'paths'     => $routing['paths'],
 					'restBases' => \Vuew\REST_BASES
 				],
+				'transitions' => [
+					'main' => 400
+				],
 				'user'        => [
 					'can_register' => (int) get_option( 'users_can_register' )
 				],
@@ -233,7 +236,6 @@ function vw_json(){
 	 * The following must not be stored in transient
 	 */
 	$vuew_config['nonces']   = [
-		'main'     => wp_create_nonce( 'wp_rest' ),
 		'userAuth' => wp_create_nonce( 'vuew_user_auth' )
 	];
 	$vuew_config['config']['user']['is_logged_in'] = is_user_logged_in();
