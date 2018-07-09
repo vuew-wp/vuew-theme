@@ -67,3 +67,37 @@ function always_excerpt( $content, $excerpt = '' ){
 }
 
 remove_filter ('the_excerpt', 'wpautop' );
+
+function vw_tree( $elements, $args = [] ) {
+
+	$args = wp_parse_args( $args, [
+		'parent_id'   => 0,
+		'parent_key'  => 'parent',
+		'elem_id_key' => 'ID'
+	] );
+
+	/** @var array $branch */
+	$branch = [];
+
+	foreach ( $elements as $element ) {
+
+		$element = (array) $element;
+
+		if ( (int) $element[ 'comment_parent' ] === (int)$args['parent_id'] ) {
+
+			$children = vw_tree( (array) $elements, [
+				'parent_key' => $args['parent_key'],
+				'parent_id'  => $element['comment_ID']
+			] );
+
+			if ( ! empty( $children ) ) {
+				$element[ 'children' ] = $children;
+			} else {
+				$element[ 'children' ] = false;
+			}
+			$branch[] = $element;
+		}
+	}
+
+	return $branch;
+}
