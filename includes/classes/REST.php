@@ -30,13 +30,15 @@ class REST extends Factory {
 	const HTTP_HEADER_PREFIX = 'X-Vuew';
 
 	const HTTP_HEADERS = [
-		'user-reg' => 'User-Registration',
+		'user-reg'   => 'User-Registration',
 		'user-login' => 'User-Login'
 	];
 
 	const API_NAMESPACE = 'vuew/v2';
 
 	protected static $date_format = '';
+
+	protected static $cache = [];
 
 	/**
 	 * REST constructor.
@@ -54,10 +56,9 @@ class REST extends Factory {
 
 		add_action( 'rest_prepare_post_type', [ __CLASS__, 'intercept_rest_prepare' ], 10, 3 );
 
-		/*add_action( 'rest_dispatch_request', function( $request, $route, $handler ){
-			$request = $request;
-			return $request;
-		}, 10, 3 );*/
+		add_action( 'rest_prepare_comment', [ __CLASS__, 'intercept_rest_prepare' ], 10, 3 );
+
+		add_action( 'rest_pre_dispatch', [ __CLASS__, 'pre_dispatch' ], 10, 3 );
 
 		static::$date_format = get_option( 'date_format' );
 
@@ -85,7 +86,7 @@ class REST extends Factory {
 		/** @var \WP_REST_Request $params */
 		$params = $request->get_params();
 
-		/** Ensure we only proceed if VuewQuery is set */
+		/** Ensure we only proceed if Vuew Request is set */
 		if ( ! isset( $params['vr'] ) ) {
 			return $data;
 		}
@@ -94,6 +95,12 @@ class REST extends Factory {
 		$current_action = str_replace( 'rest_prepare_', '', current_action() );
 		/** If action is rest_prepare_{$post_type} */
 		if ( in_array( $current_action, static::POST_TYPES ) ) {
+			/** If request is simply to get comments */
+			if ( isset( $params['vr_post_comments'] ) ) {
+				return static::prepare_post_comments( $data, $item, $request );
+			}
+
+			//Get post, reduce payload of archives
 			return static::prepare_post_type( $data, $item, $request );
 		}
 		/** If action is rest_prepare_{$taxonomy} */
@@ -134,8 +141,14 @@ class REST extends Factory {
 			'excerpt',
 			'content',
 			'date',
-			'featured_media'
+			'featured_media',
+			'comment_status'
 		];
+
+		/**
+		 * WP_Query returns 'ID' and API uses 'id'
+		 */
+		$p_id = $data->data['id'] ?? $data->data['ID'];
 
 		/**
 		 * Modify existing fields
@@ -143,16 +156,21 @@ class REST extends Factory {
 		foreach ( $fields_to_keep as $field ) {
 			/** Remove rendered from fields */
 			if ( in_array( $field, [ 'content', 'title', 'excerpt' ] ) ) {
-				if( $field === 'title' ){
+				if ( $field === 'title' ) {
 					$_data[ $field ] = $data->data[ $field ]['rendered'];
 					continue;
 				}
-				if( $field === 'excerpt' ){
-					$excerpt = isset( $data->data[ 'excerpt' ] ) ? $data->data[ 'excerpt' ]['rendered'] : '';
-					$_data[ $field ] = always_excerpt( $data->data[ 'content' ]['rendered'], $excerpt );
+				if ( $field === 'excerpt' ) {
+					$excerpt         = isset( $data->data['excerpt'] ) ? $data->data['excerpt']['rendered'] : '';
+					$_data[ $field ] = always_excerpt( $data->data['content']['rendered'], $excerpt );
 					continue;
 				}
 				$_data[ $field ] = $data->data[ $field ]['rendered'];
+				continue;
+			}
+
+			if ( 'comment_status' === $field ) {
+				$_data[ $field ] = $data->data[ $field ] ?? null;
 				continue;
 			}
 
@@ -172,8 +190,8 @@ class REST extends Factory {
 				continue;
 			}
 
-			if( 'date' === $field ){
-				$new_date = date( static::$date_format, strtotime( $data->data[ $field ] ) );
+			if ( 'date' === $field ) {
+				$new_date        = date( static::$date_format, strtotime( $data->data[ $field ] ) );
 				$_data[ $field ] = $new_date;
 				continue;
 			}
@@ -181,10 +199,7 @@ class REST extends Factory {
 			$_data[ $field ] = $data->data[ $field ];
 		}
 
-		/**
-		 * WP_Query returns 'ID' and API uses 'id'
-		 */
-		$p_id = $data->data['id'] ?? $data->data['ID'];
+		$_data[ 'comment_count' ] = (int) get_comments_number( $p_id );
 
 		$_data['route'] = [
 			'type'        => 'post_type',
@@ -197,6 +212,59 @@ class REST extends Factory {
 		$data->data = $_data;
 
 		return $data;
+
+	}
+
+	static function prepare_post_comments( $data, $post, $request ) {
+
+		/** @var int $p_id */
+		$p_id = $data->data['id'] ?? $data->data['ID'];
+		/** @var string $comment_order */
+		$comment_order = strtoupper( get_option( 'comment_order', 'desc' ) );
+		/** @var bool $can_thread_comments */
+		$can_thread_comments = 1 === (int) get_option( 'thread_comments', 1 );
+		/** @var int $thread_comments_depth */
+		$thread_comments_depth = (int) get_option( 'thread_comments_depth', 5 );
+		/** @var \WP_Comment_Query $comments */
+		$comments = get_comments( [ 'order' => $comment_order, 'post_id' => $p_id ] );
+
+		/**
+		 * Mutate comments object
+		 * by casting each comment as an array and adding the user
+		 * avatar to each comment
+		 *
+		 * @var int $k
+		 * @var \WP_Comment $comment
+		 */
+		foreach ( $comments as $k => $comment ) {
+			$comments[ $k ]                          = (array) $comment;
+			$comments[ $k ]['comment_author_avatar'] = get_avatar_url( $comments[ $k ]['comment_author_email'] );
+		}
+		/**
+		 * @see vw_list_chunk_pluck()
+		 * @var array $comments minimize payload by only sending what we need
+		 */
+		$comments = vw_list_chunk_pluck( $comments, [
+			'comment_ID',
+			'comment_date',
+			'comment_parent',
+			'comment_content',
+			'comment_author_email',
+			'comment_author_avatar',
+		] );
+
+		/**
+		 * Return un-threaded comments if backend says no
+		 */
+		if ( ! $can_thread_comments ) {
+			return $comments;
+		}
+
+		return apply_filters( 'Vuew\REST\Post\Comments', vw_tree( $comments, [
+			'elem_id_key' => 'comment_ID',
+			'parent_key'  => 'comment_parent',
+			'depth_limit' => $thread_comments_depth
+		] ) );
 
 	}
 
@@ -300,6 +368,8 @@ class REST extends Factory {
 					'excerpt'        => always_excerpt( $p->post_content, $p->post_excerpt ),
 					'content'        => $p->post_content,
 					'date'           => date( static::$date_format, strtotime( $p->post_date ) ),
+					'comment_status' => $p->comment_status,
+					'comment_count'   => (int) get_comments_number( $p->ID ),
 					'featured_media' => [
 						'thumbnail' => $attachment_id,
 						'medium'    => $attachment_id,
@@ -333,27 +403,70 @@ class REST extends Factory {
 
 	}
 
-	public static function rest_api_init() {
+	static function rest_api_init() {
 		register_rest_route( self::API_NAMESPACE, '/user/login', [
 			[
-				'methods'             => \WP_REST_Server::CREATABLE,
-				'callback'            => array( __CLASS__, 'user_login' )
+				'methods'  => \WP_REST_Server::CREATABLE,
+				'callback' => array( __CLASS__, 'user_login' )
 			]
 		] );
 		register_rest_route( self::API_NAMESPACE, '/user/register', [
 			[
-				'methods'             => \WP_REST_Server::CREATABLE,
-				'callback'            => array( __CLASS__, 'user_register' )
+				'methods'  => \WP_REST_Server::CREATABLE,
+				'callback' => array( __CLASS__, 'user_register' )
 			]
 		] );
 	}
 
-	public static function auth_min_security( &$params ){
+	/**
+	 * @param $result
+	 * @param $server \WP_REST_Server
+	 * @param $request \WP_REST_Request
+	 *
+	 * @return bool|mixed
+	 */
+	static function pre_dispatch( $result, $server, $request ){
+
+		$key = 'vuew_route_' . esc_url( self::API_NAMESPACE . $_SERVER['REQUEST_URI'] );
+
+
+		if ( method_exists( $server, 'send_headers' ) ) {
+			//$headers = apply_filters( 'rest_cache_headers', array(), $request_uri, $server, $request );
+			$server->send_headers([
+				self::HTTP_HEADER_PREFIX . '-Redis-Cache' => 1
+			]);
+		}
+
+		if( in_array( $key, self::$cache ) ){
+			return $result;
+		}
+
+		if( false === ( $rest_cache = wp_cache_get( $key, 'vuew_group' ) ) ){
+
+			if( ! in_array( $key, self::$cache ) ) {
+				array_push( self::$cache, $key );
+			}
+
+			$result  = $server->dispatch( $request );
+
+			$result->data['timestamp'] = date_i18n(time());
+
+			wp_cache_set( $key , $result, 'vuew_group', MINUTE_IN_SECONDS * 5 );
+		}
+
+		return $rest_cache;
+	}
+
+	/****************************
+	 *********** USER ***********
+	 ****************************/
+
+	public static function auth_min_security( &$params ) {
 
 		/**
 		 * Return immediately if this is not a Vuew Request
 		 */
-		if( ! isset( $params['vr'] ) ) {
+		if ( ! isset( $params['vr'] ) ) {
 			return static::format_response( 'rest_not_vuew_request', __( 'Not Vuew REST Request.' ), self::HTTP_HEADERS['user-reg'], 403 );
 		}
 
@@ -381,22 +494,22 @@ class REST extends Factory {
 		$params = $params['params'];
 
 		$info = [
-			'user_login'    => $params[ 'login-username' ],
-			'user_password' => $params[ 'login-password' ],
-			'remember'      => isset( $params[ 'login-password' ] ) ? $params[ 'login-password' ] : true
+			'user_login'    => $params['login-username'],
+			'user_password' => $params['login-password'],
+			'remember'      => isset( $params['login-password'] ) ? $params['login-password'] : true
 		];
 
 		$user_signon = wp_signon( $info, is_ssl() );
 
-		if( is_wp_error( $user_signon ) ) {
-			$error = isset( $user_signon->get_error_codes()[0] ) ? $user_signon->get_error_codes()[0] : null;
-			$error_msg = __( 'Login failure, please check all fields and try again.');
-			if( null !== $error ) {
+		if ( is_wp_error( $user_signon ) ) {
+			$error     = isset( $user_signon->get_error_codes()[0] ) ? $user_signon->get_error_codes()[0] : null;
+			$error_msg = __( 'Login failure, please check all fields and try again.' );
+			if ( null !== $error ) {
 				if ( $error === 'invalid_username' ) {
-					$error_msg = __( 'Login failure, invalid username and/or password.');
+					$error_msg = __( 'Login failure, invalid username and/or password.' );
 				}
 				if ( $error === 'incorrect_password' ) {
-					$error_msg = __( 'Login failure, invalid password.');
+					$error_msg = __( 'Login failure, invalid password.' );
 				}
 			}
 
@@ -404,6 +517,7 @@ class REST extends Factory {
 		}
 
 		wp_set_current_user( $user_signon->ID );
+
 		return static::format_response( null, __( 'Login successful.' ), self::HTTP_HEADERS['user-login'] );
 
 	}
@@ -417,7 +531,7 @@ class REST extends Factory {
 		 * Return immediately if min security fails
 		 */
 		$min_security_pass = self::auth_min_security( $params );
-		if( true !== $min_security_pass ){
+		if ( true !== $min_security_pass ) {
 			return $min_security_pass;
 		}
 
@@ -436,11 +550,11 @@ class REST extends Factory {
 			'user_pass'  => $params['register-password']  // When creating an user, `user_pass` is expected.
 		];
 
-		if( array_search('', $userdata ) !== false ){
+		if ( array_search( '', $userdata ) !== false ) {
 			return static::format_response( 'rest_user_empty_field', __( 'One or more required fields found empty.' ), self::HTTP_HEADERS['user-reg'], 409 );
 		}
 
-		if( ! is_email( $params['register-email'] ) ){
+		if ( ! is_email( $params['register-email'] ) ) {
 			return static::format_response( 'rest_user_invalid_email', __( 'Invalid email.' ), self::HTTP_HEADERS['user-reg'], 409 );
 		}
 
@@ -448,33 +562,32 @@ class REST extends Factory {
 
 		$user_register = wp_insert_user( $userdata );
 
-		if( is_wp_error( $user_register ) ) {
+		if ( is_wp_error( $user_register ) ) {
 			return static::format_response( null, $user_register->get_error_message(), self::HTTP_HEADERS['user-reg'], 409 );
 		}
 
 		/**
-		$userdata['user_password'] = $params['password'];
-		unset( $userdata['user_pass'] );
-
-		wp_set_current_user( $user_register, $userdata[ 'user_login' ] );
-		wp_set_auth_cookie( $user_register, true, is_ssl() );
-		do_action( 'wp_login', $params[ 'user_email' ] );
-		*/
+		 * $userdata['user_password'] = $params['password'];
+		 * unset( $userdata['user_pass'] );
+		 *
+		 * wp_set_current_user( $user_register, $userdata[ 'user_login' ] );
+		 * wp_set_auth_cookie( $user_register, true, is_ssl() );
+		 * do_action( 'wp_login', $params[ 'user_email' ] );
+		 */
 
 		return static::format_response( null, __( 'User authenticated.' ), self::HTTP_HEADERS['user-reg'] );
 
 	}
 
-	protected static function format_response( $code = null, $message = '', $header_key = '', $status_code = 200 )
-	{
+	protected static function format_response( $code = null, $message = '', $header_key = '', $status_code = 200 ) {
 
 		$message = '' !== $message ? $message : __( 'No message provided', 'vuew' );
 		//$code = $code === null ? $message : $code;
 		$response = new \WP_REST_Response( [
-			'data' => [
+			'data'    => [
 				'status' => $status_code
 			],
-			'code' => $code,
+			'code'    => $code,
 			'message' => $message,
 		] );
 
