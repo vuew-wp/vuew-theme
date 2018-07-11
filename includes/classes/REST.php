@@ -74,7 +74,7 @@ class REST extends Factory {
 	/**
 	 * Intercept
 	 *
-	 * Proxy and guard method to all rest_prepare_* actions
+	 * Proxy method to all rest_prepare_* actions
 	 *
 	 * @param   $data
 	 * @param   $item

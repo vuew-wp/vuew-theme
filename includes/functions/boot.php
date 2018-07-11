@@ -150,7 +150,7 @@ function vw_json(){
 					'restBases' => \Vuew\REST_BASES
 				],
 				'transitions' => [
-					'main' => 400
+					'main' => 300
 				],
 				'user'        => [
 					'can_register' => (int) get_option( 'users_can_register' )
