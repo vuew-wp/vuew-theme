@@ -58,14 +58,17 @@ class REST extends Factory {
 
 		add_action( 'rest_prepare_comment', [ __CLASS__, 'intercept_rest_prepare' ], 10, 3 );
 
-		add_action( 'rest_pre_dispatch', [ __CLASS__, 'pre_dispatch' ], 10, 3 );
+		/** Load object cache */
+		if( ! WP_DEBUG && class_exists( 'Redis' ) ) {
+			add_action( 'rest_pre_dispatch', [ __CLASS__, 'pre_dispatch' ], 10, 3 );
+		}
 
 		static::$date_format = get_option( 'date_format' );
 
 		/**
 		 * Custom endpoints
 		 */
-		add_action( 'rest_api_init', array( __CLASS__, 'rest_api_init' ), 10 );
+		add_action( 'rest_api_init', [ __CLASS__, 'rest_api_init' ], 10 );
 	}
 
 	/**
@@ -429,14 +432,6 @@ class REST extends Factory {
 
 		$key = 'vuew_route_' . esc_url( self::API_NAMESPACE . $_SERVER['REQUEST_URI'] );
 
-
-		if ( method_exists( $server, 'send_headers' ) ) {
-			//$headers = apply_filters( 'rest_cache_headers', array(), $request_uri, $server, $request );
-			$server->send_headers([
-				self::HTTP_HEADER_PREFIX . '-Redis-Cache' => 1
-			]);
-		}
-
 		if( in_array( $key, self::$cache ) ){
 			return $result;
 		}
@@ -449,9 +444,15 @@ class REST extends Factory {
 
 			$result  = $server->dispatch( $request );
 
-			$result->data['timestamp'] = date_i18n(time());
-
 			wp_cache_set( $key , $result, 'vuew_group', MINUTE_IN_SECONDS * 5 );
+		}
+
+
+		if ( is_callable([ $server, 'send_headers' ]) ) {
+			$server->send_headers([
+				self::HTTP_HEADER_PREFIX . '-Redis-Cache' => false === $rest_cache ? 'MISS' : 'HIT',
+				'Cache-Control' => 'max-age=' . MINUTE_IN_SECONDS * 5
+			]);
 		}
 
 		return $rest_cache;
