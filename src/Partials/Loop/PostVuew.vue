@@ -3,7 +3,7 @@
         <div class="uk-position-relative uk-float-left uk-width-1-1">
             <attachment :src="post.featured_media.thumbnail" :type="'background'" class="post-vuew-image uk-position-cover"></attachment>
             <div class="post-vuew-title uk-position-bottom">
-                <router-link :to="setMenuItemParams" class="uk-position-relative uk-float-left uk-width-1-1">
+                <router-link :to="setMenuItemParams( post )" class="uk-position-relative uk-float-left uk-width-1-1">
                     <h3 v-html="truncate( post.title, 4 )" class="uk-h3"></h3>
                 </router-link>
                 <a @click="toggleExcerpt" class="post-vuew-excerpt-toggle uk-margin-top uk-position-bottom-center" v-html="require( '../../svg/arrow-down.svg' )"></a>
@@ -13,7 +13,7 @@
         <div class="post-vuew-excerpt">
             <p v-html="appendToText( post.excerpt, truncate( post.title, 4, 'end' ), '<span class=\'uk-text-primary\'>...', '</span><br>' )"></p>
             <p>
-                <router-link :to="setMenuItemParams" class="uk-button uk-width-1-1 uk-button-primary uk-button-small">
+                <router-link :to="setMenuItemParams( post )" class="uk-button uk-width-1-1 uk-button-primary uk-button-small">
                     Read More
                 </router-link>
             </p>
@@ -47,7 +47,7 @@
 
         background-color: @vw-color-darker;
 
-        div:first-child{
+        > div > div:first-child{
             padding-bottom: 100%;
         }
 

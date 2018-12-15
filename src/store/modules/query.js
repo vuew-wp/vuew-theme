@@ -2,7 +2,7 @@
  * Vuex - Query module
  */
 
-import {HTTP} from '../../common/http_proxy';
+import { HTTP } from '../../common/http_proxy';
 import { debug } from '../../debug';
 import { helpers } from "../../common/helpers";
 
@@ -11,12 +11,12 @@ import { helpers } from "../../common/helpers";
  * @type {{queries: Array, queryIndex: number}}
  */
 const state = {
-    /** Has query loaded */
-    loaded: true,
-    /** Has query pending */
-    pending: false,
-    /** Has query loaded */
-    paginationPending: false
+	/** Has query loaded */
+	loaded: true,
+	/** Has query pending */
+	pending: false,
+	/** Has query loaded */
+	paginationPending: false
 };
 
 /**
@@ -24,26 +24,26 @@ const state = {
  * @type {{UPDATE_QUERY_INDEX: (function(*, *)), UPDATE_QUERIES: (function(*, *=))}}
  */
 const mutations = {
-    ADD_404: (state, data) => {
-        //Update queryIndex
-        data.type = data.component = 'four04';
-        data.type_value = false;
-        //Add new queries object to stackTrace
-        state.queries[data.path] = data;
-    },
+	ADD_404: ( state, data ) => {
+		//Update queryIndex
+		data.type = data.component = 'four04';
+		data.type_value = false;
+		//Add new queries object to stackTrace
+		state.queries[ data.path ] = data;
+	},
 
-    UPDATE_REQUEST_STATE: (state, transition) => {
-        state.pending = transition.pending;
-        state.loaded  = transition.loaded;
-    },
+	UPDATE_REQUEST_STATE: ( state, transition ) => {
+		state.pending = transition.pending;
+		state.loaded = transition.loaded;
+	},
 
-    PAGINATION_PENDING: (state, newState) => {
-        state.paginationPending = newState;
-    },
+	PAGINATION_PENDING: ( state, newState ) => {
+		state.paginationPending = newState;
+	},
 
-    UPDATE_CACHE_STORE: (state, type) => {
-        state.cacheStore = type;
-    }
+	UPDATE_CACHE_STORE: ( state, type ) => {
+		state.cacheStore = type;
+	}
 
 };
 
@@ -53,171 +53,193 @@ const mutations = {
  */
 const actions = {
 
-    /**
-     * Manage query on navigating
-     *
-     * @param store
-     * @param queryVars
-     */
-    navigate: (store, queryVars) => {
+	/**
+	 * Manage query on navigating
+	 *
+	 * @param store
+	 * @param queryVars
+	 */
+	navigate: ( store, queryVars ) => {
 
-        /** Notifications */
-        store.dispatch( 'notify/clearNotification', null, { root: true } );
-        store.dispatch( 'notify/addNotification',
-            '<strong>> Navigation started</strong>', { root: true } );
+		/** Init request state */
+		store.commit( "UPDATE_REQUEST_STATE", {
+			loaded: false,
+			pending: true
+		} );
 
-        /** Init request state */
-        store.commit("UPDATE_REQUEST_STATE", {
-            loaded: false,
-            pending: true
-        });
+		/** @type {string|*} path */
+		const path = queryVars.path;
 
-        /** @type {string|*} path */
-        const path = queryVars.path;
+		/** Current path pointer */
+		store.dispatch( 'updateCurrentPath', path, { root: true } );
 
-        /** Current path pointer */
-        store.dispatch( 'updateCurrentPath', path, { root: true } );
+		/**
+		 * Is 404
+		 */
+		if ( queryVars.type === 404 ) {
+			/** Add route query to cache */
+			store.dispatch( 'force404', queryVars );
+			return;
+		}
 
-        if( queryVars.type === 404 ){
-            /** Add route query to cache */
-            store.dispatch( 'force404', queryVars );
-            return;
-        }
+		/**
+		 * Bail if route query cache exists
+		 */
+		if ( store.rootGetters[ 'cache/queryCacheExists' ] ) {
 
-        /** Bail if route query cache exists */
-        if ( store.rootGetters[ 'cache/queryCacheExists' ] ) {
+			/** If back or forward is clicked in browser */
+			if ( false === queryVars.id ) {
+				debug.log( 'query/navigate', 'BACK / FORWARD in browser' );
+			} else {
+				debug.log( 'query/navigate', 'Cache exists' );
+			}
 
-            /** If back or forward is clicked in browser */
-            if( false === queryVars.id ){
-                store.dispatch( 'notify/addNotification',
-                    '<strong>> BACK / FORWARD in browser</strong>', { root: true } );
-            } else {
-                store.dispatch( 'notify/addNotification',
-                    '<strong>> Cache exists</strong>', { root: true } );
-            }
+			store.commit( "UPDATE_REQUEST_STATE", { loaded: true, pending: false } );
+			return;
 
-            store.commit( "UPDATE_REQUEST_STATE", {loaded: true, pending: false });
-            return;
+		}
 
-        }
+		/**
+		 * Edge case check.
+		 */
+		if ( false === queryVars.id ) {
+			if ( !queryVars.rest_base && !queryVars.type && !queryVars.type_value ) {
+				window.location.href = path;
+				debug.log( 'query/navigate', 'Reload browser' );
+			}
+		}
 
-        store.dispatch( 'notify/addNotification',
-            '<strong>> Component</strong> -> ' + queryVars.component, { root: true } );
+		/** Bail if post cache exists */
+		if ( store.rootGetters[ 'cache/postCacheExists' ]( path ) ) {
+			queryVars.payload.cached = true;
+			store.dispatch( 'cache/addRouteQuery', queryVars, { root: true } );
+			store.commit( "UPDATE_REQUEST_STATE", { loaded: true, pending: false } );
+			return;
+		}
 
-        /** Bail if post cache exists */
-        if( store.rootGetters[ 'cache/postCacheExists' ](path) ){
-            queryVars.payload.cached = true;
-            store.dispatch( 'cache/addRouteQuery', queryVars, { root: true } );
-            store.commit( "UPDATE_REQUEST_STATE", {loaded: true, pending: false });
-            return;
-        }
+		/**
+		 * Fetch Archives
+		 */
+		if ( queryVars.isArchive ) {
+			store.dispatch( 'fetchArchive', queryVars );
+			return;
+		}
 
-        /**
-         * Archives
-         */
-        if( queryVars.isArchive ) {
-            store.dispatch( 'fetchArchive', queryVars );
-            return;
-        }
+		/**
+		 * Fetch by id - single post/post_types
+		 */
+		HTTP.get( queryVars.rest_base + '/' + queryVars.id )
+		    .then( response => {
 
-        /** Main query */
-        store.dispatch( 'notify/addNotification', '<strong>> Fetching from</strong> -> ' + queryVars.rest_base + '/' + queryVars.id, { root: true } );
+			    /** Add payload to query store */
+			    queryVars.payload = {
+				    cached: true,
+				    posts: [ response.data ]
+			    };
 
-        HTTP.get( queryVars.rest_base + '/' + queryVars.id )
-            .then(response => {
+			    /** Add route query to cache */
+			    store.dispatch( 'cache/addRouteQuery', queryVars, { root: true } );
 
-                store.dispatch( 'notify/addNotification', '<strong>> Response rehtfhtceived</strong>', { root: true } );
+			    /** Update request state */
+			    store.commit( "UPDATE_REQUEST_STATE", { loaded: true, pending: false } );
 
-                /** Add payload to query store */
-                queryVars.payload = {
-                    cached: true,
-                    posts : [ response.data ]
-                };
+		    } )
+		    .catch( e => {
+			    /** Add route query to cache */
+			    store.dispatch( 'force404', queryVars );
+		    } );
+	},
 
-                /** Add route query to cache */
-                store.dispatch( 'cache/addRouteQuery', queryVars, { root: true } );
+	force404: ( store, queryVars ) => {
+		HTTP.get( 'VUEW_QUERY_FORCE_404?path=' + encodeURI( queryVars.path ) )
+		    .catch( e => {
+			    store.dispatch( 'cache/add404', queryVars, { root: true } );
+			    store.commit( "UPDATE_REQUEST_STATE", {
+				    loaded: true,
+				    pending: false
+			    } );
+		    } );
+	},
 
-                /** Update request state */
-                store.commit("UPDATE_REQUEST_STATE", {loaded: true, pending: false});
+	/**
+	 * Add Post lists
+	 *
+	 * @param store
+	 * @param queryArgs
+	 */
+	fetchArchive: ( store, queryArgs ) => {
 
-            })
-            .catch(e => {
-                /** Add route query to cache */
-                store.dispatch( 'force404', queryVars );
-            });
-    },
+		const endPoint = helpers.getArchiveEndpoint( queryArgs );
 
-    force404: ( store, queryVars ) => {
-        HTTP.get( 'VUEW_QUERY_FORCE_404?path=' + encodeURI( queryVars.path ) )
-            .catch(e => {
-                store.dispatch( 'cache/add404', queryVars, { root: true } );
-                store.commit( "UPDATE_REQUEST_STATE", {
-                    loaded: true,
-                    pending: false
-                });
-                store.dispatch( 'notify/addNotification',
-                    '<strong>> ERROR: Server response</strong> -> ' + e, { root: true } );
-            });
-    },
+		if ( store.rootGetters.isFirstLoad && Vuew.config.layout.archives[ queryArgs.type ].hasOwnProperty( 'atf' ) ) {
+			store.dispatch( 'cacheBoot', queryArgs );
+			return;
+		}
 
-    /**
-     * Add Post lists
-     *
-     * @param store
-     * @param queryArgs
-     */
-    fetchArchive: (store, queryArgs) => {
+		/**
+		 * Do archive request
+		 */
+		HTTP.get( endPoint )
+		    .then( response => {
 
-        const endPoint = helpers.getArchiveEndpoint( queryArgs );
+			    /** Add payload to queriedObject */
+			    queryArgs.payload = response.data;
+			    /** Dispatch route query */
+			    store.dispatch( 'cache/addRouteQuery', queryArgs, { root: true } );
+			    store.commit( "UPDATE_REQUEST_STATE", { loaded: true, pending: false } );
 
-        store.dispatch( 'notify/addNotification',
-            '<strong>> Fetching archive</strong> -> ' + endPoint, { root: true } );
+		    } )
+		    .catch( e => {
+			    debug.force( e );
+			    store.commit( "UPDATE_REQUEST_STATE", { loaded: true, pending: false } );
+		    } );
+	},
 
-        HTTP.get( endPoint )
-            .then(response => {
+	cacheBoot: ( store, queryArgs ) => {
+		/** Add boot content */
+		store.dispatch( 'cache/addRouteQuery', queryArgs, { root: true } );
+		/** Add belowFold content */
+		store.dispatch( 'addPostsToList' );
+		store.commit( "UPDATE_REQUEST_STATE", { loaded: true, pending: false } );
+	},
 
-                queryArgs.payload = response.data;
+	addPostsToList: ( store ) => {
 
-                store.dispatch('cache/addRouteQuery', queryArgs, {root: true});
+		const currentQueriedObject = store.getters.getCurrentQueriedObject;
+		const ppp = Vuew.config.query.ppp;
+		const postCount = currentQueriedObject.payload.post_count;
 
-                store.commit("UPDATE_REQUEST_STATE", {loaded: true, pending: false});
+		let endPoint = helpers.getArchivePaginationEndpoint( currentQueriedObject );
 
-                store.dispatch( 'notify/addNotification',
-                    '<strong>> Response received</strong> -> ' + response.data.found_posts + ' posts found.', { root: true } );
+		store.commit( "PAGINATION_PENDING", true );
 
-            })
-            .catch(e => {
-                debug.force(e);
-                store.commit("UPDATE_REQUEST_STATE", {loaded: true, pending: false});
-            });
-    },
+		HTTP.get( endPoint + 'offset=' + postCount + '&per_page=' + ppp )
+		    .then( response => {
 
-    addPostsToList: ( store ) => {
+			    store.dispatch( 'cache/updateQueryPostList', {
+				    posts: response.data
+			    }, { root: true } );
 
-        const currentQueriedObject = store.getters.getCurrentQueriedObject;
-        const ppp = Vuew.config.query.ppp;
-        const postCount = currentQueriedObject.payload.post_count;
-        const page = ( postCount / ppp ) + 1;
+			    store.commit( "PAGINATION_PENDING", false );
 
-        let endPoint = helpers.getArchivePaginationEndpoint( currentQueriedObject );
+		    } )
+		    .catch( e => {
+			    store.commit( "PAGINATION_PENDING", false );
+			    console.log( e );
+		    } );
+	},
 
-        store.commit("PAGINATION_PENDING", true);
-
-        HTTP.get( endPoint + 'page=' + page + '&per_page=' + ppp /*+ '&orderby=date&order=desc'*/ )
-            .then(response => {
-
-                store.dispatch('cache/updateQueryPostList', {
-                    posts: response.data
-                }, { root: true } );
-
-                store.commit("PAGINATION_PENDING", false);
-
-            })
-            .catch(e => {
-                store.commit("PAGINATION_PENDING", false);
-                console.log(e);
-            });
-    }
+	getComments: ( store, postId ) => {
+		//store.commit( "COMMENTS_PENDING", true );
+		HTTP.get( 'posts/' + postId + '?vr_post_comments=1' ).then( response => {
+			console.log( response.data );
+			store.commit( "cache/CACHE_ADD_COMMENTS", { postId: postId, comments: response.data }, { root: true } )
+			//store.commit( "COMMENTS_PENDING", false );
+		} ).catch( e => {
+			console.log( e );
+			//store.commit( "COMMENTS_PENDING", false );
+		} );
+	}
 
 };
 
@@ -227,38 +249,46 @@ const actions = {
  */
 const getters = {
 
-    /**
-     * @param state
-     * @param getters
-     * @param rootState
-     * @param rootGetters
-     * @returns {*}
-     */
-    getCurrentQueriedObject: ( state, getters, rootState, rootGetters ) => {
+	/**
+	 * @param state
+	 * @param getters
+	 * @param rootState
+	 * @param rootGetters
+	 * @returns {*}
+	 */
+	getCurrentQueriedObject: ( state, getters, rootState, rootGetters ) => {
 
-        const queries = rootGetters['cache/getQueriesCache'];
-        let currentPath = rootGetters['getCurrentPath'];
+		const queries = rootGetters[ 'cache/getQueriesCache' ];
+		let currentPath = rootGetters[ 'getCurrentPath' ];
 
-        if( currentPath && queries.hasOwnProperty( currentPath ) ){
-            return queries[ currentPath ];
-        }
-    },
+		if ( currentPath && queries.hasOwnProperty( currentPath ) ) {
+			return queries[ currentPath ];
+		}
+	},
 
-    paginationPending: state => {
-        return state.paginationPending
-    },
+	getComments: ( state ) => {
 
-    /**
-     * @param state
-     * @returns {boolean}
-     */
-    isLoaded: state => state.loaded,
+	},
 
-    /**
-     * @param state
-     * @returns {boolean}
-     */
-    isPending: state => state.pending
+	/**
+	 * @param state
+	 * @returns {boolean}
+	 */
+	paginationPending: state => {
+		return state.paginationPending
+	},
+
+	/**
+	 * @param state
+	 * @returns {boolean}
+	 */
+	isLoaded: state => state.loaded,
+
+	/**
+	 * @param state
+	 * @returns {boolean}
+	 */
+	isPending: state => state.pending
 };
 
 /**
@@ -268,9 +298,9 @@ const getters = {
 const namespaced = true;
 
 export default {
-    namespaced,
-    state,
-    getters,
-    actions,
-    mutations
+	namespaced,
+	state,
+	getters,
+	actions,
+	mutations
 }

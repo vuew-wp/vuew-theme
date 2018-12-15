@@ -39,14 +39,17 @@ export const helpers = {
     prepareQuery: ( query ) => {
         return {
             id: query.id,
-            path: query.path,
-            component: helpers.getComponent(query.type, query.id, query.path),
-            type: query.type,
-            payload: query,
-            rest_base: query.rest_base,
-            type_value: query.type_value,
-            isArchive: ('home' === query.type && Vuew.config.pageOnFront === 0) || 'taxonomy' === query.type || 'post_type_archive' === query.type
+	        payload: query,
+	        path: query.path,
+	        type: query.type,
+	        rest_base: query.rest_base,
+	        type_value: query.type_value,
+	        component: helpers.getComponent(query.type, query.id, query.path),
+	        isArchive: helpers.isArchive( query )
         }
+    },
+    isArchive: ( query ) => {
+	    return ('home' === query.type && Vuew.config.pageOnFront === 0) || 'taxonomy' === query.type || 'post_type_archive' === query.type;
     }
 
 

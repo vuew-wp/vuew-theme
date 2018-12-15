@@ -18,9 +18,9 @@
 		//]]>
     </script>
     <script>
-		/*if ('serviceWorker' in navigator) {
+		if ('serviceWorker' in navigator) {
 			window.addEventListener('load', function() {
-				navigator.serviceWorker.register(" //echo get_theme_file_uri('sw.js'); ?>').then(function(registration) {
+				navigator.serviceWorker.register(" <?php echo get_theme_file_uri('sw.js'); ?>').then(function(registration) {
 					// Registration was successful
 					console.log('ServiceWorker registration successful with scope: ', registration.scope);
 				}, function(err) {
@@ -28,7 +28,7 @@
 					console.log('ServiceWorker registration failed: ', err);
 				});
 			});
-		}*/
+		}
     </script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-121620171-1"></script>

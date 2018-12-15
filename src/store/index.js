@@ -30,8 +30,9 @@ Vue.use( Vuex );
 export const store =  new Vuex.Store({
     state: {
         currentPath : '',
-        firstLoad: null,
-        isArchive: null
+        isFirstLoad: null,
+        isArchive: null,
+        isHome: null
     },
     actions,
     getters,

@@ -29,8 +29,8 @@
             home:       () => ({
                 component: parseInt( Vuew.config.pageOnFront ) > 0 ?
                     import( /* webpackChunkName: "home" */ '../Templates/Home.vue' ) :
-                    import( /* webpackChunkName: "index" */ '../Templates/Index.vue' )
-                //...LoadingErrorComponents
+                    import( /* webpackChunkName: "index" */ '../Templates/Index.vue' ),
+                ...LoadingErrorComponents
             }),
             PreLoader,
             four04: Four04
