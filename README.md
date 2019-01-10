@@ -9,7 +9,7 @@ The Vuew theme can be seen in action [here](https://10pl8.com).
 ## Current Features:
 * Simple & lightweight custom built slider.
 * Custom Login/regsitration.
-* Full state management for all routes and images.
+* Full state management for all routes and images, using https://vuex.vuejs.org/.
 * Custom load more.
 * Lazy loading images.
 * Above/below the fold considerations.
