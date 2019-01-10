@@ -1,4 +1,5 @@
-![Vuew Theme](https://avatars1.githubusercontent.com/u/37987871?s=460&v=4)
+<img src="https://10pl8.com/wp-content/themes/vuew/src/svg/vuew-logo.svg" width="300" style="float:left; margin-right:10px">
+
 ## Vuew Theme
 A [VueJS](https://vuejs.org) powered WordPress theme. 
 
