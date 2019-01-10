@@ -10,3 +10,4 @@ The Vuew theme can be seen in action [here](https://10pl8.com).
 * Comments 80%
 * Complete styling
 * Child theme API
+* Update WebPack to v4
