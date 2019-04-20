@@ -5,9 +5,12 @@ export const mutations = {
         Vue.set( state, 'currentPath', path );
     },
     'TOGGLE_FIRST_LOAD': ( state, isFirstLoad ) => {
-        state.firstLoad = isFirstLoad;
+        state.isFirstLoad = isFirstLoad;
     },
     'TOGGLE_IS_ARCHIVE': ( state, isArchive ) => {
         state.isArchive = isArchive;
+    },
+    'TOGGLE_IS_HOME': ( state, isHome ) => {
+        state.isHome = isHome;
     }
 };

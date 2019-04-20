@@ -10,6 +10,7 @@
 namespace Vuew\Core;
 
 function init() {
+	
 	$labels = array(
 		'name'                  => _x( 'Products', 'Post Type General Name', 'text_domain' ),
 		'singular_name'         => _x( 'Products', 'Post Type Singular Name', 'text_domain' ),

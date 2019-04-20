@@ -128,7 +128,7 @@ function post_type_archive_query( $initial_object_type, $post_type ) {
 
 }
 
-function vw_json(){
+function vw_json() {
 	$vuew_config = get_transient( 'vuew_config' );
 
 	if ( WP_DEBUG || isset( $_GET['transient_cache_bypass'] ) || false === $vuew_config ) {
@@ -150,12 +150,12 @@ function vw_json(){
 					'restBases' => \Vuew\REST_BASES
 				],
 				'transitions' => [
-					'main' => 300
+					'main' => 400
 				],
 				'user'        => [
 					'can_register' => (int) get_option( 'users_can_register' )
 				],
-				'tracking' => [
+				'tracking'    => [
 					'googleAnalytics' => 'UA-121620171-1'
 				],
 				'query'       => [
@@ -166,33 +166,49 @@ function vw_json(){
 						'home'              => [
 							'columns' => 3,
 							'type'    => 'post-vuew',
-							/** Above the fold */
-							'atf' => [
+							/*'atf' => [
 								[
 									'postsPerComponent' => 2,
-									'name'                => 'post-list-overflow',
+									'name'              => 'post-list-overflow',
+									'excerpt'           => true,
 									'options'           => [
-										'excerpt' => true,
 									],
 								],
 								[
 									'title'             => 'Other News',
 									'postsPerComponent' => 3,
 									'name'              => 'post-list',
+									'excerpt'           => true,
 									'options'           => [
-										'excerpt' => true,
 									],
 									'columns'           => [
 										1
 									]
 								]
+							],*/
+							/** Above the fold */
+							/** Above the fold */
+							'atf'     => [
+								[
+									'postsPerComponent' => 4,
+									'name'              => 'post-list-slider',
+									'options'           => [
+										'snapTo'         => 'left', //Center or right
+										'flickTolerance' => 200,
+										'slideWidth'     => [
+											'm'      => 90,
+											'd'      => 25,
+											'suffix' => 'vw'
+										],
+									],
+								]
 							],
 							/** Below the fold */
-							'btf' => [
+							'btf'     => [
 								[
 									'postsPerComponent' => $ppp,
-									'name'                => 'post-list-expander',
-									'columns'             => [
+									'name'              => 'post-list-expander',
+									'columns'           => [
 										1,
 										3
 									]
@@ -204,12 +220,12 @@ function vw_json(){
 						],
 						'taxonomy'          => [
 							'columns' => 4,
-							'atf' => [
+							'atf'     => [
 								[
-									'title' => 'Other News',
+									'title'             => 'Other News',
 									'postsPerComponent' => 5,
-									'name'                => 'post-list',
-									'columns'             => [
+									'name'              => 'post-list',
+									'columns'           => [
 										1
 									]
 								]
@@ -235,11 +251,11 @@ function vw_json(){
 	/**
 	 * The following must not be stored in transient
 	 */
-	$vuew_config['nonces']   = [
+	$vuew_config['nonces']                         = [
 		'userAuth' => wp_create_nonce( 'vuew_user_auth' )
 	];
 	$vuew_config['config']['user']['is_logged_in'] = is_user_logged_in();
-	$vuew_config['config']['boot'] = functions\boot\object();
+	$vuew_config['config']['boot']                 = functions\boot\object();
 
 	return json_encode( $vuew_config );
 }

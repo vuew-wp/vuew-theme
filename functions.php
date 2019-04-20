@@ -14,7 +14,7 @@ use Vuew\Core\Menu;
 use Vuew\Core\REST;
 use Vuew\functions;
 
-const VER = '0.0.3';
+const VER = '0.0.4';
 
 /** URL & Path to theme */
 define( __NAMESPACE__ . '\DIR', trailingslashit( get_template_directory() ) );
@@ -75,7 +75,7 @@ function vuew_assets() {
 	wp_dequeue_script( 'jquery' );
 
 	if ( WP_DEBUG ) {
-		wp_enqueue_script( 'vuew', 'https://localhost:8080/dist/main.js', [], VER, true );
+		wp_enqueue_script( 'vuew', 'https://localhost:4000/dist/main.js', [], VER, true );
 	}
 
 }

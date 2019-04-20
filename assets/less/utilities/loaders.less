@@ -60,7 +60,7 @@
 
   &-loading {
     animation: pulsing-fade 6000ms ease infinite;
-    color: @vw-color-lightest;
+    color: @vw-color-darkest;
     font-size: 18px;
     letter-spacing: 4px;
     font-weight: 300;
@@ -100,4 +100,14 @@
 
   &-5 { animation-delay: @triangle-speed-basis * 4; }
   &-5 &-polygon { stroke: white; }
+}
+
+.vw-attachment-loader{
+  svg{
+    max-width: 40%;
+    position: absolute;
+    top: 30%;
+    left: 30%;
+    fill: @vw-color-light;
+  }
 }

@@ -1,9 +1,6 @@
 <template>
-    <div class="uk-position-cover" style="background: #111111;">
-        <div class="triangle-wrapper uk-position-center">
-            <div v-for="(n, index ) in 5" class="triangle" :class="'triangle-' + index">
-                <i v-html="require( '../svg/triangle.svg' )"></i>
-            </div>
+    <div class="uk-position-relative">
+        <div class="uk-position-center">
             <p class="triangle-loading" v-html="loadingText"></p>
         </div>
     </div>
