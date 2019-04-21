@@ -32,5 +32,10 @@
     "default": "",
     "validate_callback": "validSelect",
     "error_message" : "Select is not valid"
+  },
+  "textarea": {
+    "default": "",
+    "validate_callback": "validTextArea",
+    "error_message" : "Textarea is not valid"
   }
 }

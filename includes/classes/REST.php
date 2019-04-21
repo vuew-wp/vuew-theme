@@ -59,7 +59,7 @@ class REST extends Factory {
 		add_action( 'rest_prepare_comment', [ __CLASS__, 'intercept_rest_prepare' ], 10, 3 );
 
 		/** Load object cache */
-		if( ! WP_DEBUG && class_exists( 'Redis' ) ) {
+		if ( ! WP_DEBUG && class_exists( 'Redis' ) ) {
 			add_action( 'rest_pre_dispatch', [ __CLASS__, 'pre_dispatch' ], 10, 3 );
 		}
 
@@ -113,6 +113,10 @@ class REST extends Factory {
 		/** If action is rest_prepare_post_type */
 		if ( 'post_type' === $current_action ) {
 			return static::prepare_post_type_archive( $data, $item, $request );
+		}
+		/** If action is rest_prepare_post_type */
+		if ( 'comment' === $current_action ) {
+			return static::prepare_comment( $data, $item, $request );
 		}
 
 		return $data;
@@ -202,7 +206,7 @@ class REST extends Factory {
 			$_data[ $field ] = $data->data[ $field ];
 		}
 
-		$_data[ 'comment_count' ] = (int) get_comments_number( $p_id );
+		$_data['comment_count'] = (int) get_comments_number( $p_id );
 
 		$_data['route'] = [
 			'type'        => 'post_type',
@@ -242,6 +246,7 @@ class REST extends Factory {
 		foreach ( $comments as $k => $comment ) {
 			$comments[ $k ]                          = (array) $comment;
 			$comments[ $k ]['comment_author_avatar'] = get_avatar_url( $comments[ $k ]['comment_author_email'] );
+			$comments[ $k ]['comment_ID']            = (int) $comments[ $k ]['comment_ID'];
 		}
 		/**
 		 * @see vw_list_chunk_pluck()
@@ -254,6 +259,9 @@ class REST extends Factory {
 			'comment_content',
 			'comment_author_email',
 			'comment_author_avatar',
+			'comment_approved',
+			'comment_author',
+			'user_id'
 		] );
 
 		/**
@@ -269,6 +277,22 @@ class REST extends Factory {
 			'depth_limit' => $thread_comments_depth
 		] ) );
 
+	}
+
+	/**
+	 * @param $data
+	 * @param $post
+	 * @param $request
+	 *
+	 * @return mixed
+	 */
+	static function prepare_comment( $data, $post, $request ) {
+		$return_data = $data;
+		if ( ! isset( $return_data->data['content']['raw'] ) ) {
+			$return_data->data['content']['raw'] = strip_tags( $return_data->data['content']['rendered'] );
+		}
+
+		return $return_data;
 	}
 
 	/**
@@ -372,7 +396,7 @@ class REST extends Factory {
 					'content'        => $p->post_content,
 					'date'           => date( static::$date_format, strtotime( $p->post_date ) ),
 					'comment_status' => $p->comment_status,
-					'comment_count'   => (int) get_comments_number( $p->ID ),
+					'comment_count'  => (int) get_comments_number( $p->ID ),
 					'featured_media' => [
 						'thumbnail' => $attachment_id,
 						'medium'    => $attachment_id,
@@ -413,10 +437,22 @@ class REST extends Factory {
 				'callback' => array( __CLASS__, 'user_login' )
 			]
 		] );
+		register_rest_route( self::API_NAMESPACE, '/user/logout', [
+			[
+				'methods'  => \WP_REST_Server::CREATABLE,
+				'callback' => array( __CLASS__, 'user_logout' )
+			]
+		] );
 		register_rest_route( self::API_NAMESPACE, '/user/register', [
 			[
 				'methods'  => \WP_REST_Server::CREATABLE,
 				'callback' => array( __CLASS__, 'user_register' )
+			]
+		] );
+		register_rest_route( self::API_NAMESPACE, '/comments', [
+			[
+				'methods'  => \WP_REST_Server::CREATABLE,
+				'callback' => array( __CLASS__, 'comments' )
 			]
 		] );
 	}
@@ -428,39 +464,37 @@ class REST extends Factory {
 	 *
 	 * @return bool|mixed
 	 */
-	static function pre_dispatch( $result, $server, $request ){
+	static function pre_dispatch( $result, $server, $request ) {
 
 		$key = 'vuew_route_' . esc_url( self::API_NAMESPACE . $_SERVER['REQUEST_URI'] );
 
-		if( in_array( $key, self::$cache ) ){
+		if ( in_array( $key, self::$cache ) ) {
 			return $result;
 		}
 
-		if( false === ( $rest_cache = wp_cache_get( $key, 'vuew_group' ) ) ){
+		if ( false === ( $rest_cache = wp_cache_get( $key, 'vuew_group' ) ) ) {
 
-			if( ! in_array( $key, self::$cache ) ) {
+			if ( ! in_array( $key, self::$cache ) ) {
 				array_push( self::$cache, $key );
 			}
 
-			$result  = $server->dispatch( $request );
+			$result = $server->dispatch( $request );
 
-			wp_cache_set( $key , $result, 'vuew_group', MINUTE_IN_SECONDS * 5 );
+			wp_cache_set( $key, $result, 'vuew_group', MINUTE_IN_SECONDS * 5 );
 		}
 
 
-		if ( is_callable([ $server, 'send_headers' ]) ) {
-			$server->send_headers([
+		if ( is_callable( [ $server, 'send_headers' ] ) ) {
+			$server->send_headers( [
 				self::HTTP_HEADER_PREFIX . '-Redis-Cache' => false === $rest_cache ? 'MISS' : 'HIT',
-				'Cache-Control' => 'max-age=' . MINUTE_IN_SECONDS * 5
-			]);
+				'Cache-Control'                           => 'max-age=' . MINUTE_IN_SECONDS * 5
+			] );
 		}
 
 		return $rest_cache;
 	}
 
-	/****************************
-	 *********** USER ***********
-	 ****************************/
+	/*************************************** USER ***************************************/
 
 	public static function auth_min_security( &$params ) {
 
@@ -472,35 +506,28 @@ class REST extends Factory {
 		}
 
 		/**
-		 * Already logged in
+		 * Don't take any nonce'nse!
 		 */
-		if ( is_user_logged_in() ) {
-			return static::format_response( 'rest_user_already_logged_in', __( 'User already logged in.' ), self::HTTP_HEADERS['user-reg'], 203 );
-		}
-
-		/**
-		 * Don't take any nonsense!
-		 */
-		if ( ! wp_verify_nonce( $params['params']['nonce'], 'vuew_user_auth' ) ) {
+		if ( ! wp_verify_nonce( $params['nonce'], 'vuew_user_auth' ) ) {
 			return static::format_response( 'rest_cookie_invalid_nonce', __( 'Nonce verification failure.' ), self::HTTP_HEADERS['user-reg'], 403 );
 		}
 
 		return true;
 	}
 
-	public static function user_login( \WP_REST_Request $request ) {
-
-		/** @var array $params */
-		$params = $request->get_params();
-		$params = $params['params'];
-
-		$info = [
-			'user_login'    => $params['login-username'],
-			'user_password' => $params['login-password'],
-			'remember'      => isset( $params['login-password'] ) ? $params['login-password'] : true
-		];
-
-		$user_signon = wp_signon( $info, is_ssl() );
+	/**
+	 * @param $credentials
+	 * @param int $uid
+	 *
+	 * @return string
+	 *
+	 * @todo User Auth, allow auto authentication during registration.
+	 */
+	public static function auth_user( $credentials = [] ) {
+		if ( empty($credentials) ) {
+			return '';
+		}
+		$user_signon = wp_signon( $credentials, is_ssl() );
 
 		if ( is_wp_error( $user_signon ) ) {
 			$error     = isset( $user_signon->get_error_codes()[0] ) ? $user_signon->get_error_codes()[0] : null;
@@ -517,9 +544,44 @@ class REST extends Factory {
 			return static::format_response( null, $error_msg, self::HTTP_HEADERS['user-login'], 409 );
 		}
 
-		wp_set_current_user( $user_signon->ID );
+		$uid = $user_signon->ID;
+		wp_set_current_user( $uid );
 
-		return static::format_response( null, __( 'Login successful.' ), self::HTTP_HEADERS['user-login'] );
+		return $uid;
+	}
+
+	public static function user_login( \WP_REST_Request $request ) {
+
+		/** @var array $params */
+		$params = $request->get_params();
+
+		/**
+		 * Return immediately if min security fails
+		 */
+		$min_security_pass = self::auth_min_security( $params );
+		if ( true !== $min_security_pass ) {
+			return $min_security_pass;
+		}
+
+		/**
+		 * @type \WP_REST_Request|int
+		 */
+		$uid = static::auth_user( [
+			'user_login'    => $params['login-username'],
+			'user_password' => $params['login-password'],
+			'remember'      => $params['login-password'] ?? true
+		] );
+
+		if ( $uid instanceof \WP_REST_Request ) {
+			return $uid;
+		}
+
+		return static::format_response( null, [
+			'userId'   => $uid,
+			'wpRest'   => wp_create_nonce( 'wp_rest' ),
+			'userAuth' => wp_create_nonce( 'vuew_user_auth' ),
+			'text'     => __( 'Login successful.' )
+		], self::HTTP_HEADERS['user-login'] );
 
 	}
 
@@ -535,8 +597,6 @@ class REST extends Factory {
 		if ( true !== $min_security_pass ) {
 			return $min_security_pass;
 		}
-
-		$params = $params['params'];
 
 		/**
 		 * WP Admin->Settings->General
@@ -568,16 +628,44 @@ class REST extends Factory {
 		}
 
 		/**
-		 * $userdata['user_password'] = $params['password'];
-		 * unset( $userdata['user_pass'] );
-		 *
-		 * wp_set_current_user( $user_register, $userdata[ 'user_login' ] );
-		 * wp_set_auth_cookie( $user_register, true, is_ssl() );
-		 * do_action( 'wp_login', $params[ 'user_email' ] );
+		 * @type \WP_REST_Request|int
 		 */
+		$uid = static::auth_user( [
+			'user_login'    => $userdata['user_login'],
+			'user_password' => $userdata['user_pass'],
+			'remember'      => $userdata['register-password'] ?? true
+		] );
 
-		return static::format_response( null, __( 'User authenticated.' ), self::HTTP_HEADERS['user-reg'] );
+		if ( $uid instanceof \WP_REST_Request ) {
+			return $uid;
+		}
 
+		return static::format_response( null, [
+			'userId' => $uid,
+			'wpRest'    => wp_create_nonce( 'wp_rest' ),
+			'userAuth' => wp_create_nonce( 'vuew_user_auth' ),
+			'text'   => __( 'User Registered. Login successful.' )
+		], self::HTTP_HEADERS['user-reg'] );
+
+	}
+
+	public static function user_logout( \WP_REST_Request $request ){
+		/** @var array $params */
+		$params = $request->get_params();
+		/**
+		 * Return immediately if min security fails
+		 */
+		$min_security_pass = self::auth_min_security( $params );
+		if ( true !== $min_security_pass ) {
+			return $min_security_pass;
+		}
+		wp_logout();
+		return static::format_response( null, [
+			'userId'   => -1,
+			'wpRest'    => wp_create_nonce( 'wp_rest' ),
+			'userAuth' => wp_create_nonce( 'vuew_user_auth' ),
+			'text'   => __( 'User logged out.' )
+		], self::HTTP_HEADERS['user-logout'] );
 	}
 
 	protected static function format_response( $code = null, $message = '', $header_key = '', $status_code = 200 ) {

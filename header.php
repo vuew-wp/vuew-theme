@@ -16,6 +16,8 @@
         <meta name="Description" content="A VueJS and WordPress Theme">
 
         <link rel="manifest" href="<?php echo get_theme_file_uri( 'manifest.json' ); ?>">
+        <link rel="canonical" href="<?php echo vw_get_current_url();?>" />
+
         <meta name="theme-color" content="#15a9d1"/>
 
 		<?php wp_head(); ?>

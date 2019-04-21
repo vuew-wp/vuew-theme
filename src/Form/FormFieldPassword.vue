@@ -99,7 +99,7 @@
         }
     }
 </script>
-<style lang="less" scoped>
+<style lang="less">
     .vw-password-strength-indicator{
         height: 4px;
 

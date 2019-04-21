@@ -142,6 +142,7 @@ function vw_json() {
 		$vuew_config = [
 			'restRoot' => rest_url(),
 			'baseUrl'  => home_url(),
+			'themeUrl' => trailingslashit( get_theme_file_uri() ),
 			'config'   => [
 				'pageOnFront' => (int) get_option( 'page_on_front' ),
 				'navigation'  => [
@@ -153,7 +154,13 @@ function vw_json() {
 					'main' => 400
 				],
 				'user'        => [
-					'can_register' => (int) get_option( 'users_can_register' )
+					'canRegister' => 1 === (int) get_option( 'users_can_register' )
+				],
+				'comments'    => [
+					'commentOrder'        => get_option( 'comment_order' ),
+					'requireNameEmail'    => 1 === (int) get_option( 'require_name_email' ),
+					'commentModeration'   => 1 === (int) get_option( 'comment_moderation' ),
+					'commentRegistration' => 1 === (int) get_option( 'comment_registration' )
 				],
 				'tracking'    => [
 					'googleAnalytics' => 'UA-121620171-1'
@@ -251,11 +258,39 @@ function vw_json() {
 	/**
 	 * The following must not be stored in transient
 	 */
-	$vuew_config['nonces']                         = [
-		'userAuth' => wp_create_nonce( 'vuew_user_auth' )
+	$vuew_config['nonces']                           = [
+		'userAuth' => wp_create_nonce( 'vuew_user_auth' ),
+		'wpRest'   => wp_create_nonce( 'wp_rest' )
 	];
-	$vuew_config['config']['user']['is_logged_in'] = is_user_logged_in();
-	$vuew_config['config']['boot']                 = functions\boot\object();
+	$vuew_config['config']['user']['isUserLoggedIn'] = is_user_logged_in();
+	$vuew_config['config']['user']['userId']         = ( $uid = get_current_user_id() ) > 0 ? $uid : - 1;
+	$vuew_config['config']['boot']                   = functions\boot\object();
 
 	return json_encode( $vuew_config );
 }
+
+/**
+ * @link    https://remonpel.nl/2018/06/wordpress-rest-api-nonce-sense/
+ */
+add_action( 'set_logged_in_cookie', function ( $cookie_value ) {
+	$_COOKIE[ LOGGED_IN_COOKIE ] = $cookie_value;
+}, PHP_INT_MAX );
+add_action( 'clear_auth_cookie', function () {
+	$_COOKIE[ LOGGED_IN_COOKIE ] = ' ';
+} );
+add_action( 'wp_login', function ( $login, $user ) {
+	wp_set_current_user( $user->ID );
+}, PHP_INT_MAX, 2 );
+add_action( 'wp_logout', function () {
+	wp_set_current_user( 0 );
+}, PHP_INT_MAX );
+add_filter( 'rest_allow_anonymous_comments', '__return_true' );
+
+
+add_filter( 'show_admin_bar', '__return_false' );
+
+add_action( 'send_headers', function($h) {
+	//var_dump($h);
+	//header( 'Service-Worker-Allowed: /srv/www/sight/public_html/' );
+	//header( 'Content-Type: application/javascript' );
+}, 10, 2 );

@@ -93,11 +93,16 @@ function vw_tree( $elements, $args = [] ) {
 			if ( ! empty( $children ) ) {
 				$element[ 'children' ] = $children;
 			} else {
-				$element[ 'children' ] = false;
+				$element[ 'children' ] = [];
 			}
 			$branch[] = $element;
 		}
 	}
 
 	return $branch;
+}
+
+function vw_get_current_url(){
+	global $wp;
+	return home_url( $wp->request );
 }

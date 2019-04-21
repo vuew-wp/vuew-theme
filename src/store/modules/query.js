@@ -5,6 +5,7 @@
 import { HTTP } from '../../common/http_proxy';
 import { debug } from '../../debug';
 import { helpers } from "../../common/helpers";
+import {vwQuery} from "../../utilities/query";
 
 /**
  * Stored properties
@@ -16,7 +17,9 @@ const state = {
 	/** Has query pending */
 	pending: false,
 	/** Has query loaded */
-	paginationPending: false
+	paginationPending: false,
+	/** Comments request is in progress */
+	commentsPending: false
 };
 
 /**
@@ -43,6 +46,10 @@ const mutations = {
 
 	UPDATE_CACHE_STORE: ( state, type ) => {
 		state.cacheStore = type;
+	},
+
+  COMMENTS_PENDING: ( state, pending ) => {
+		state.commentsPending = pending;
 	}
 
 };
@@ -228,16 +235,19 @@ const actions = {
 			    console.log( e );
 		    } );
 	},
-
+  /**
+	 * Get Comments
+   * @param store
+   * @param postId
+   */
 	getComments: ( store, postId ) => {
-		//store.commit( "COMMENTS_PENDING", true );
+		store.commit( "COMMENTS_PENDING", true );
 		HTTP.get( 'posts/' + postId + '?vr_post_comments=1' ).then( response => {
-			console.log( response.data );
 			store.commit( "cache/CACHE_ADD_COMMENTS", { postId: postId, comments: response.data }, { root: true } )
-			//store.commit( "COMMENTS_PENDING", false );
+			store.commit( "COMMENTS_PENDING", false );
 		} ).catch( e => {
 			console.log( e );
-			//store.commit( "COMMENTS_PENDING", false );
+			store.commit( "COMMENTS_PENDING", false );
 		} );
 	}
 
@@ -266,8 +276,26 @@ const getters = {
 		}
 	},
 
-	getComments: ( state ) => {
+	commentsOpen: ( state, getters ) => {
+		const post = getters['currentSingular'];
+		if(
+			Object.keys(post).length > 0
+			&& Object.prototype.hasOwnProperty.call(post, 'comment_status')
+		){
+			return 'open' === post.comment_status;
+		}
+		return false;
+	},
 
+	currentSingular: ( state, getters, rootState, rootGetters ) => {
+		const post = rootGetters['cache/getPostsCache'];
+		if(!Object.prototype.hasOwnProperty.call(
+			post,
+			rootGetters['getCurrentPath'])
+		){
+			return {};
+		}
+		return post[rootGetters['getCurrentPath']];
 	},
 
 	/**
@@ -288,7 +316,14 @@ const getters = {
 	 * @param state
 	 * @returns {boolean}
 	 */
-	isPending: state => state.pending
+	isPending: state => state.pending,
+
+	/**
+	 *
+	 * @param state
+	 * @returns {actions.getComments|default.computed.getComments|Parser.getComments}
+	 */
+	commentsPending: state => state.commentsPending
 };
 
 /**

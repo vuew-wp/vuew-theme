@@ -4,7 +4,7 @@ export const getters = {
 			if ( '/' === state.currentPath ) {
 				return '/';
 			}
-			return state.currentPath.replace( /\/$/, "" );
+			return state.currentPath.replace( /\/$/, "" ).trim();
 		}
 	},
 	isFirstLoad: ( state ) => {

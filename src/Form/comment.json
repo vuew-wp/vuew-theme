@@ -1,0 +1,13 @@
+{
+  "$schema": "",
+  "title": "Comment:",
+  "properties": [
+    {
+      "label": "Comment:",
+      "id": "content",
+      "type": "textarea",
+      "placeholder": "Your comment?",
+      "required": true
+    }
+  ]
+}

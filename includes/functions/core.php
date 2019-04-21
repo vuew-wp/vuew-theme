@@ -10,7 +10,7 @@
 namespace Vuew\Core;
 
 function init() {
-	
+
 	$labels = array(
 		'name'                  => _x( 'Products', 'Post Type General Name', 'text_domain' ),
 		'singular_name'         => _x( 'Products', 'Post Type Singular Name', 'text_domain' ),
@@ -44,7 +44,7 @@ function init() {
 		'label'               => __( 'Products', 'text_domain' ),
 		'description'         => __( 'Post Type Description', 'text_domain' ),
 		'labels'              => $labels,
-		'supports'            => array( 'title', 'editor', 'thumbnail' ),
+		'supports'            => array( 'title', 'editor', 'thumbnail', 'custom-fields' ),
 		'hierarchical'        => false,
 		'public'              => true,
 		'show_ui'             => true,
@@ -58,6 +58,7 @@ function init() {
 		'publicly_queryable'  => true,
 		'capability_type'     => 'post',
 		'show_in_rest'        => true,
+		'taxonomies'          => ['category', 'post_tag'],
 		'rest_base'           => 'products',
 		'rewrite'             => array(
 			'slug'         => 'products'
@@ -109,6 +110,7 @@ function init() {
 		'can_export'          => true,
 		'has_archive'         => 'entries',
 		'exclude_from_search' => false,
+		'taxonomies'          => ['category', 'post_tag'],
 		'publicly_queryable'  => true,
 		'capability_type'     => 'post',
 		'show_in_rest'        => true,

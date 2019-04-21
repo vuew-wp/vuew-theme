@@ -12,5 +12,8 @@ export const mutations = {
     },
     'TOGGLE_IS_HOME': ( state, isHome ) => {
         state.isHome = isHome;
+    },
+    'USER_ID': ( state, id ) => {
+        state.userId = id;
     }
 };

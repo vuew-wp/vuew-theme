@@ -39,7 +39,3 @@
 		mixins: [ mixins.anchor, mixins.text, mixins.viewPort  ]
 	}
 </script>
-
-<style scoped>
-
-</style>

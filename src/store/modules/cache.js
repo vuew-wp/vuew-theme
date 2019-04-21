@@ -6,7 +6,7 @@
  */
 import Vue from 'vue';
 import { debug } from '../../debug';
-
+import { commentHelper } from '../../utilities/comments';
 
 /**
  * Cache State object
@@ -85,7 +85,15 @@ const mutations = {
 
 	CACHE_ADD_COMMENTS: ( state, args ) => {
 		Vue.set( state.comments, args.postId, args.comments );
-	}
+	},
+
+	CACHE_UPDATE_COMMENT_THREAD: ( state, args ) => {
+		state.comments[args.postId].splice(args.threadIndex, 1, args.thread)
+	},
+
+	CACHE_ADD_COMMENT: ( state, args ) => {
+		state.comments[args.postId].unshift(args.comment);
+	},
 
 };
 
@@ -108,6 +116,7 @@ const actions = {
 	addIdToExclude: ( store, path ) => {
 		store.commit( 'CACHE_ADD_PATH', path );
 	},
+
 	/**
 	 * Add post to query cache item
 	 *
@@ -196,6 +205,28 @@ const actions = {
 
 	addImagePath: ( store, image ) => {
 		store.commit( "CACHE_ADD_IMAGE_PATH", image );
+	},
+
+	addComment: ( store, args ) => {
+    const { ancestors } = args;
+    const postedComment = args.comment;
+    const { i, thread } = store.getters.getPostCommentThreadAndIndex(args.pId, ancestors[0]);
+		if(-1 === i){
+			store.commit( "CACHE_ADD_COMMENT", {
+				postId: args.pId,
+				comment: commentHelper.cleanComment(args.comment),
+			} );
+			return;
+		}
+		let t = JSON.parse(JSON.stringify(thread));
+		t.children = commentHelper
+			.addCheckpoints(ancestors)
+			.updateThread(t, postedComment, ancestors);
+		store.commit( "CACHE_UPDATE_COMMENT_THREAD", {
+			postId: args.pId,
+			threadIndex: i,
+			thread: t,
+		} );
 	}
 };
 
@@ -259,6 +290,21 @@ const getters = {
 
 	getPostsCache: ( state ) => {
 		return state.postsCache;
+	},
+
+	postCommentsExist: ( state ) => ( postId ) => {
+		return Object.hasOwnProperty.call(state.comments, postId);
+	},
+
+	getPostCommentThreadAndIndex: ( state ) => ( postId, commentId ) => {
+		let { comments } = state;
+		comments = comments[postId];
+		for(let i = 0, m = comments.length; i < m; i++){
+			if(commentId === parseInt(comments[i].comment_ID)){
+				return { i, thread: comments[i]};
+			}
+		}
+		return { i: -1, thread: {}};
 	},
 
 	getPostComments: ( state ) => ( postId ) => {

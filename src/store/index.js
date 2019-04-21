@@ -20,6 +20,8 @@ import cache from './modules/cache'
 import notify from './modules/notify'
 /** Displaying data delivery stacktrace */
 import layout from './modules/layout'
+/** User store management */
+import user from './modules/user'
 
 Vue.use( Vuex );
 
@@ -32,7 +34,7 @@ export const store =  new Vuex.Store({
         currentPath : '',
         isFirstLoad: null,
         isArchive: null,
-        isHome: null
+        isHome: null,
     },
     actions,
     getters,
@@ -41,7 +43,8 @@ export const store =  new Vuex.Store({
         query,
         cache,
         notify,
-        layout
+        layout,
+        user,
     },
     strict: process.env.NODE_ENV !== 'production',
     plugins: []

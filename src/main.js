@@ -32,6 +32,11 @@ import router from './router';
  */
 import { store } from './store';
 
+// Subscribe to store updates
+store.subscribe((mutation, state) => {
+   // console.log(mutation, state);
+});
+
 /**
  * Root App
  */
@@ -44,5 +49,8 @@ import App from './App.vue';
 new Vue({
     router,
     store,
+    /*created(){
+      this.intersectionObserver =
+    },*/
     render: h => h(App),
 }).$mount('#vuew-app');

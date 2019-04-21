@@ -20,15 +20,15 @@
 
             <div v-for="(post, i) in posts" :key="post.path" class="vw-slider-post__slide"
                  :style="{ width: options.slideWidth.m + 'vw' }" ref="postSlide">
-                <!--<router-link :to="setMenuItemParams( post )" class="uk-display-block">-->
-                <attachment :src="post.featured_media.thumbnail" :type="'background'"
-                            style="padding-bottom: 80%; background-color: #444;"
-                            class="uk-width-1-1 uk-position-relative">
-                    <div class="vw-slider-post__title">
-                        <h2 v-html="post.title" style="color: #ffffff;" class="uk-margin-remove"></h2>
-                    </div>
-                </attachment>
-                <!--</router-link>-->
+                <router-link :to="setMenuItemParams( post )" class="uk-display-block">
+                    <attachment :src="post.featured_media.thumbnail" :type="'background'"
+                                style="padding-bottom: 80%; background-color: #444;"
+                                class="uk-width-1-1 uk-position-relative">
+                        <div class="vw-slider-post__title">
+                            <h2 v-html="post.title" style="color: #ffffff;" class="uk-margin-remove"></h2>
+                        </div>
+                    </attachment>
+                </router-link>
             </div>
 
         </div>
