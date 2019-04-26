@@ -1,14 +1,9 @@
 <template>
-    <div v-html="theContent"></div>
+  <div v-html="theContent"></div>
 </template>
 
 <script>
-
-    export default {
-
-        props: [
-            'theContent'
-        ]
-
-    };
+export default {
+  props: ['theContent'],
+};
 </script>

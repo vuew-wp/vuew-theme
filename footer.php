@@ -10,10 +10,9 @@
   var Vuew = <?php echo \Vuew\functions\boot\vw_json();?>;
   //]]>
 </script>
-<?php if ( ! WP_DEBUG ) : ?>
+<?php if ( ! SCRIPT_DEBUG ) : ?>
     <script defer>
       //<![CDATA[
-	  <?php echo file_get_contents( get_theme_file_path( 'dist/vendor.js' ) ); ?>
 	  <?php echo file_get_contents( get_theme_file_path( 'dist/main.js' ) ); ?>
       //]]>
     </script>

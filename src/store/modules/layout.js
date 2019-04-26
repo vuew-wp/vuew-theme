@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * Layout Vue
  * used for setting object keys and maintaining reactivity.
@@ -7,62 +8,61 @@
 import Vue from 'vue';
 
 const state = {
-    offCanvases : {
-        active: ""
-    }
+  offCanvases: {
+    active: '',
+  },
 };
 
 const mutations = {
-    'TOGGLE_OFF_CANVAS': ( state, data ) => {
+  TOGGLE_OFF_CANVAS: (state, data) => {
+    const currentActiveCanvas = Object.keys(state.offCanvases).find(
+      key => state.offCanvases[key] === true,
+    );
 
-        const currentActiveCanvas = Object.keys( state.offCanvases ).find( key => state.offCanvases[ key ] === true );
-
-        if( currentActiveCanvas === data.target ){
-            state.offCanvases.active = '';
+    if (currentActiveCanvas === data.target) {
+      state.offCanvases.active = '';
+    } else {
+      if (typeof currentActiveCanvas !== 'undefined') {
+        Vue.set(state.offCanvases, [currentActiveCanvas], false);
+        if (typeof data.target === 'undefined') {
+          state.offCanvases.active = '';
+          return;
         }
-        else {
-            if( typeof currentActiveCanvas !== "undefined" ){
-                Vue.set( state.offCanvases, [ currentActiveCanvas ], false );
-                if( typeof data.target === "undefined" ){
-                    state.offCanvases.active = "";
-                    return;
-                }
-            }
-            state.offCanvases.active = data.target;
-        }
-
-        Vue.set( state.offCanvases, [ data.target ], data.open );
-
-    },
-    'ADD_OFF_CANVAS': ( state, target ) => {
-        Vue.set( state.offCanvases, [ target ], false );
+      }
+      state.offCanvases.active = data.target;
     }
+
+    Vue.set(state.offCanvases, [data.target], data.open);
+  },
+  ADD_OFF_CANVAS: (state, target) => {
+    Vue.set(state.offCanvases, [target], false);
+  },
 };
 
 const actions = {
-    toggleOffCanvas: ( store, data ) => {
-        store.commit( 'TOGGLE_OFF_CANVAS', { open: data.open, target: data.target } );
-    },
-    addOffCanvas: ( store, data = { open: true } ) => {
-        store.commit( 'ADD_OFF_CANVAS', data.target );
-    }
+  toggleOffCanvas: (store, data) => {
+    store.commit('TOGGLE_OFF_CANVAS', { open: data.open, target: data.target });
+  },
+  addOffCanvas: (store, data = { open: true }) => {
+    store.commit('ADD_OFF_CANVAS', data.target);
+  },
 };
 
 const getters = {
-    offCanvasState: ( state ) => ( target ) => {
-        return state.offCanvases[ target ];
-    },
-    hasActiveCanvas: ( state ) => {
-        return "" !== state.offCanvases.active;
-    }
+  offCanvasState: state => target => {
+    return state.offCanvases[target];
+  },
+  hasActiveCanvas: state => {
+    return state.offCanvases.active !== '';
+  },
 };
 
 const namespaced = true;
 
 export default {
-    namespaced,
-    state,
-    getters,
-    actions,
-    mutations
-}
+  namespaced,
+  state,
+  getters,
+  actions,
+  mutations,
+};

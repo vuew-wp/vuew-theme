@@ -131,7 +131,7 @@ function post_type_archive_query( $initial_object_type, $post_type ) {
 function vw_json() {
 	$vuew_config = get_transient( 'vuew_config' );
 
-	if ( WP_DEBUG || isset( $_GET['transient_cache_bypass'] ) || false === $vuew_config ) {
+	if ( SCRIPT_DEBUG || isset( $_GET['transient_cache_bypass'] ) || false === $vuew_config ) {
 
 		/** @var array $routing */
 		$routing = Menu::routing();

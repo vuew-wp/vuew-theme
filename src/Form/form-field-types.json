@@ -3,39 +3,39 @@
     "default": "",
     "minChars": 8,
     "validate_callback": "validPassword",
-    "error_message" : "Password is not valid",
-    "confirmInput" : false,
-    "strengthIndicator" : false,
-    "formType" : "login"
+    "error_message": "Password is not valid",
+    "confirmInput": false,
+    "strengthIndicator": false,
+    "formType": "login"
   },
   "text": {
     "default": "",
     "validate_callback": "validText",
-    "error_message" : "Text is not valid"
+    "error_message": "Text is not valid"
   },
   "number": {
     "default": "",
     "validate_callback": "validNumber",
-    "error_message" : "Number is not valid"
+    "error_message": "Number is not valid"
   },
   "email": {
     "default": "",
     "validate_callback": "validEmail",
-    "error_message" : "Email is not valid"
+    "error_message": "Email is not valid"
   },
   "checkbox": {
     "default": "",
     "validate_callback": "validCheckbox",
-    "error_message" : "Checkbox is not valid"
+    "error_message": "Checkbox is not valid"
   },
   "select": {
     "default": "",
     "validate_callback": "validSelect",
-    "error_message" : "Select is not valid"
+    "error_message": "Select is not valid"
   },
   "textarea": {
     "default": "",
     "validate_callback": "validTextArea",
-    "error_message" : "Textarea is not valid"
+    "error_message": "Textarea is not valid"
   }
 }

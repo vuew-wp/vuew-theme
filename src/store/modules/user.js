@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * User store
  * Tracking user state and WordPress nonce's
@@ -28,7 +29,7 @@ const mutations = {
    * @param uid
    * @constructor
    */
-  UPDATE_USER_ID: ( state, uid ) => {
+  UPDATE_USER_ID: (state, uid) => {
     state.id = uid;
   },
   /**
@@ -37,7 +38,7 @@ const mutations = {
    * @param args
    * @constructor
    */
-  NONCE_UPDATE: ( state, args ) => {
+  NONCE_UPDATE: (state, args) => {
     state[args.name] = args.nonce;
   },
 };
@@ -49,11 +50,11 @@ const mutations = {
  */
 const actions = {
   updateUserId: (store, uid) => {
-    store.commit('UPDATE_USER_ID', uid)
+    store.commit('UPDATE_USER_ID', uid);
   },
-  updateNonce: ( store, args ) => {
-    store.commit('NONCE_UPDATE', args)
-  }
+  updateNonce: (store, args) => {
+    store.commit('NONCE_UPDATE', args);
+  },
 };
 
 /**
@@ -64,10 +65,10 @@ const actions = {
  * @since   0.0.1
  */
 const getters = {
-  getId: ( state ) => {
+  getId: state => {
     return state.id;
   },
-  getNonce: ( state ) => ( name ) => {
+  getNonce: state => name => {
     return state[name];
   },
 };
@@ -83,5 +84,5 @@ export default {
   state,
   getters,
   actions,
-  mutations
-}
+  mutations,
+};

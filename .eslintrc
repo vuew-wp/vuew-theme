@@ -1,0 +1,18 @@
+{
+  "parser": "babel-eslint",
+  "extends": ["airbnb-base", "plugin:prettier/recommended"],
+  "rules": {
+    "linebreak-style": 0,
+    "no-debugger": 0,
+    "no-console": 0,
+    "no-underscore-dangle": 0,
+    "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }]
+  },
+  "globals": {
+    "document": false,
+    "window": false,
+    "Window": false,
+    "VUEW_DEBUG": false,
+    "wp": false
+  }
+}
