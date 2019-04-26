@@ -3,9 +3,6 @@
 ## Vuew Theme
 A [VueJS](https://vuejs.org) powered WordPress theme. 
 
-## Demo:
-The Vuew theme can be seen in action [here](https://10pl8.com).
-
 ## Current Features:
 * Simple & lightweight custom built slider.
 * Custom Login/regsitration.
@@ -17,8 +14,8 @@ The Vuew theme can be seen in action [here](https://10pl8.com).
 * Lighthouse 96-99% for performance
 
 ## Todo:
-* Comments 80%
+* ~~Comments 100%~~
 * Complete styling
 * Child theme API
-* Update WebPack to v4
-* PWA; Offline storage and IndexDB caching
+* ~~Update WebPack to v4~~
+* PWA
