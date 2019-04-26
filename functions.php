@@ -19,6 +19,8 @@ const VER = '0.0.4';
 /** URL & Path to theme */
 define( __NAMESPACE__ . '\DIR', trailingslashit( get_template_directory() ) );
 define( __NAMESPACE__ . '\URL', trailingslashit( get_template_directory_uri() ) );
+define( __NAMESPACE__ . '\PROTOCAL', is_ssl() ? 'https' : 'http' );
+define( __NAMESPACE__ . '\DIST', SCRIPT_DEBUG ? PROTOCAL . '://localhost:4000/dist/' : URL . '/dist/' );
 
 /**
  * Includes
@@ -74,14 +76,14 @@ function vuew_assets() {
 
 	wp_dequeue_script( 'jquery' );
 
-	if ( WP_DEBUG ) {
-		wp_enqueue_script( 'vuew', 'https://localhost:4000/dist/main.js', [], VER, true );
+	if ( SCRIPT_DEBUG ) {
+		wp_enqueue_script( 'vuew', PROTOCAL . '://localhost:4000/dist/main.js', [], VER, true );
 	}
 
 }
 
-/*require_once( DIR . 'includes/Blocks/Blocks.php' );
-new Core\Utils\Blocks();*/
+require_once( DIR . 'includes/Blocks/Blocks.php' );
+new Core\Utils\Blocks();
 
 /**
  *

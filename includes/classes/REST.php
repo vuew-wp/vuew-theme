@@ -59,7 +59,7 @@ class REST extends Factory {
 		add_action( 'rest_prepare_comment', [ __CLASS__, 'intercept_rest_prepare' ], 10, 3 );
 
 		/** Load object cache */
-		if ( ! WP_DEBUG && class_exists( 'Redis' ) ) {
+		if ( ! SCRIPT_DEBUG && class_exists( 'Redis' ) ) {
 			add_action( 'rest_pre_dispatch', [ __CLASS__, 'pre_dispatch' ], 10, 3 );
 		}
 

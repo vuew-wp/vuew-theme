@@ -23,7 +23,7 @@
 		<?php wp_head(); ?>
 
         <style>
-            <?php if( ! WP_DEBUG ) : ?>
+            <?php if( ! SCRIPT_DEBUG ) : ?>
                 <?php echo file_get_contents( get_theme_file_path('dist/main.css') ); ?>
             <?php endif; ?>
         </style>

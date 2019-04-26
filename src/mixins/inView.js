@@ -1,21 +1,22 @@
+/* eslint-disable */
 export default {
   data() {
     return {
-      observer: null
-    }
+      observer: null,
+    };
   },
-  mounted(){
-    if(typeof window.IntersectionObserver === 'function'){
+  mounted() {
+    if (typeof window.IntersectionObserver === 'function') {
       const config = {
         root: null, // avoiding 'root' or setting it to 'null' sets it to default value: viewport
         rootMargin: '0px',
-        threshold: 0
+        threshold: 0,
       };
       let isLeaving = false;
       this.observer = new IntersectionObserver((entries, SELF) => {
         entries.forEach(entry => {
-          console.log("entrie: ", entries);
-          console.log("SelF: ", SELF);
+          /*console.log('entrie: ', entries);
+          console.log('SelF: ', SELF);*/
           if (entry.isIntersecting) {
             // we are ENTERING the "capturing frame". Set the flag.
             isLeaving = true;
@@ -30,7 +31,5 @@ export default {
       this.observer.observe(this.$el);
     }
   },
-  methods: {
-
-  }
-}
+  methods: {},
+};

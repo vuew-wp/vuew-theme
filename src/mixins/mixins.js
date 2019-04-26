@@ -1,39 +1,38 @@
+/* eslint-disable */
 import _ from 'lodash';
 
 export default {
   anchor: {
     methods: {
-      setMenuItemParams: function (post) {
-
+      setMenuItemParams(post) {
         const vm = post.route;
         const type = vm.type;
         const type_value = vm.type_value;
         const breadcrumbs = vm.breadcrumbs;
         const base = breadcrumbs.length > 0 ? breadcrumbs[0] : '';
 
-        let menu = {
+        const menu = {
           name: type,
           params: {
-            base: base,
-            type: type,
+            base,
+            type,
             id: post.id,
-            type_value: type_value,
-            rest_base: vm.rest_base
-          }
+            type_value,
+            rest_base: vm.rest_base,
+          },
         };
 
         for (let i = 1, m = breadcrumbs.length; i < m; i++) {
-          menu.params['slug' + i] = breadcrumbs[i];
+          menu.params[`slug${i}`] = breadcrumbs[i];
         }
 
         return menu;
-      }
-    }
+      },
+    },
   },
   text: {
     methods: {
-      truncate: function (string, count = 5, sliceFrom = 'start') {
-
+      truncate(string, count = 5, sliceFrom = 'start') {
         if (!string) return '';
 
         let stringPieces = string.split(' ');
@@ -42,50 +41,57 @@ export default {
           return string;
         }
 
-        if ('start' === sliceFrom) {
+        if (sliceFrom === 'start') {
           stringPieces = stringPieces.slice(0, count);
-          return stringPieces.join(' ') + '...';
+          return `${stringPieces.join(' ')}...`;
         }
-        if ('end' === sliceFrom) {
+        if (sliceFrom === 'end') {
           stringPieces = stringPieces.slice(count, count + count);
           return stringPieces.join(' ');
         }
 
         return 'Cannot truncate text';
       },
-      appendToText(text = null, appendText = '', appendStartElem = '', appendEndElem = '') {
-        if (null === text) {
-          console.error('at least one argument is required by appendToText() method for ', this);
+      appendToText(
+        text = null,
+        appendText = '',
+        appendStartElem = '',
+        appendEndElem = '',
+      ) {
+        if (text === null) {
+          console.error(
+            'at least one argument is required by appendToText() method for ',
+            this,
+          );
           return '';
         }
-        if ('' === appendText) {
+        if (appendText === '') {
           return text;
         }
 
         return appendStartElem + appendText + appendEndElem + text;
-      }
-    }
+      },
+    },
   },
   loop: {
     methods: {
-      getPostsFromPaths: function (postPaths) {
-
+      getPostsFromPaths(postPaths) {
         if (!postPaths) {
           return {};
         }
 
         const postList = this.$store.getters['cache/getPostsCache'];
-        let postsToDisplay = {};
+        const postsToDisplay = {};
 
         for (let i = 0, m = postPaths.length; i < m; i++) {
           postsToDisplay[i] = postList[postPaths[i]];
         }
 
         return postsToDisplay;
-      }
+      },
     },
     computed: {
-      queryData: function () {
+      queryData() {
         if (!this.query) {
           return {};
         }
@@ -94,14 +100,16 @@ export default {
           return this.query.path;
         }
         return this.getPostsFromPaths(this.query);
-      }
-    }
+      },
+    },
   },
   inViewPort: {
     mounted() {
       const vm = this;
-      const delay = vm.$store.getters['isFirstLoad'] ? 0 : Vuew.config.transitions.main;
-      setTimeout(function () {
+      const delay = vm.$store.getters.isFirstLoad
+        ? 0
+        : Vuew.config.transitions.main;
+      setTimeout(function() {
         if (vm.isComponentInViewport(vm.$el)) {
           vm.inView = true;
           vm.inViewPort();
@@ -113,38 +121,42 @@ export default {
     data() {
       return {
         inView: false,
-        throttle: 100
+        throttle: 100,
       };
     },
-    destroyed: function () {
+    destroyed() {
       window.removeEventListener('scroll', this.windowScroll);
     },
     methods: {
-      windowScroll: _.throttle(function () {
+      windowScroll: _.throttle(function() {
         this.inView = this.isComponentInViewport(this.$el);
         if (this.inView) {
           window.removeEventListener('scroll', this.windowScroll);
           this.inViewPort();
         }
       }, 100),
-      isComponentInViewport: (el) => {
+      isComponentInViewport: el => {
         const rect = el.getBoundingClientRect();
-        const windowHeight = (window.innerHeight || document.documentElement.clientHeight);
-        return (rect.top <= windowHeight) && ((rect.top + rect.height) >= 0);
+        const windowHeight =
+          window.innerHeight || document.documentElement.clientHeight;
+        return rect.top <= windowHeight && rect.top + rect.height >= 0;
       },
       inViewPort() {
-        console.log.error('This should be overridden using inViewPort() method.');
-      }
-    }
+        console.log.error(
+          'This should be overridden using inViewPort() method.',
+        );
+      },
+    },
   },
   viewPort: {
     methods: {
-      componentInView: // noinspection BadExpressionStatementJS
-        (el) => {
-          const rect = el.getBoundingClientRect();
-          const windowHeight = (window.innerHeight || document.documentElement.clientHeight);
-          return (rect.top <= windowHeight) && ((rect.top + rect.height) >= 0);
-        }
-    }
-  }
+      // noinspection BadExpressionStatementJS
+      componentInView: el => {
+        const rect = el.getBoundingClientRect();
+        const windowHeight =
+          window.innerHeight || document.documentElement.clientHeight;
+        return rect.top <= windowHeight && rect.top + rect.height >= 0;
+      },
+    },
+  },
 };

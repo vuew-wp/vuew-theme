@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * Notify
  *
@@ -5,38 +6,38 @@
  */
 
 const state = {
-    routeChange         : '',
-    routeChangeVerbose  : ''
+  routeChange: '',
+  routeChangeVerbose: '',
 };
 
 const mutations = {
-    ADD_NOTIFICATION: (state, msg) => {
-        state.routeChange = msg;
-    }
+  ADD_NOTIFICATION: (state, msg) => {
+    state.routeChange = msg;
+  },
 };
 
 const actions = {
-    clearNotification: ( store ) => {
-        store.commit( 'ADD_NOTIFICATION', '' );
-    },
-    addNotification: ( store, msg ) => {
-        const prevNotifications = store.getters[ 'getNotifications' ];
-        store.commit( 'ADD_NOTIFICATION', prevNotifications + "<br>" + msg );
-    }
+  clearNotification: store => {
+    store.commit('ADD_NOTIFICATION', '');
+  },
+  addNotification: (store, msg) => {
+    const prevNotifications = store.getters.getNotifications;
+    store.commit('ADD_NOTIFICATION', `${prevNotifications}<br>${msg}`);
+  },
 };
 
 const getters = {
-    getNotifications: ( state ) => {
-        return state.routeChange;
-    }
+  getNotifications: state => {
+    return state.routeChange;
+  },
 };
 
 const namespaced = true;
 
 export default {
-    namespaced,
-    state,
-    getters,
-    actions,
-    mutations
-}
+  namespaced,
+  state,
+  getters,
+  actions,
+  mutations,
+};

@@ -1,7 +1,7 @@
 <script>
-    import Archive from "../Archive/Archive";
+import Archive from '../Archive/Archive';
 
-    export default {
-        extends : Archive
-    };
+export default {
+  extends: Archive,
+};
 </script>

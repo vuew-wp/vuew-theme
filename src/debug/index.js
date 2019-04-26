@@ -1,20 +1,21 @@
-let debugObj = {
-    error: function (...msg) {
-        console.error(msg)
-    },
-    force: function ( ...msg ){
-        console.error(msg)
-    }
+/* eslint-disable */
+const debugObj = {
+  error(...msg) {
+    console.error(msg);
+  },
+  force(...msg) {
+    console.error(msg);
+  },
 };
 
-if ('development' === NODE_ENV) {
-    debugObj.log = function (...msg) {
-        if ('verbose' === VUEW_DEBUG) {
-            console.log(msg);
-        }
-    };
+if (VUEW_DEBUG === 'development') {
+  debugObj.log = function(...msg) {
+    if (VUEW_DEBUG === 'verbose') {
+      console.log(msg);
+    }
+  };
 } else {
-    debugObj.log = function (...msg) {}
+  debugObj.log = function(...msg) {};
 }
 
 export const debug = debugObj;

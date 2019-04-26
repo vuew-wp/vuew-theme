@@ -1,45 +1,45 @@
 {
-  "$schema" : "",
-  "title" : "Register:",
-  "properties" : [
+  "$schema": "",
+  "title": "Register:",
+  "properties": [
     {
       "label": "Username:",
-      "id" : "register-username",
-      "required" : true,
-      "type" : "text",
-      "desc" : "Select a unique username.",
-      "placeholder" : "Username?"
+      "id": "register-username",
+      "required": true,
+      "type": "text",
+      "desc": "Select a unique username.",
+      "placeholder": "Username?"
     },
     {
-      "label" : "First name?",
-      "id" : "register-firstname",
-      "required" : true,
-      "type" : "text",
-      "placeholder" : "First name?"
+      "label": "First name?",
+      "id": "register-firstname",
+      "required": true,
+      "type": "text",
+      "placeholder": "First name?"
     },
     {
-      "label" : "Last name?",
-      "id" : "register-lastname",
-      "type" : "text",
-      "placeholder" : "Last name?"
+      "label": "Last name?",
+      "id": "register-lastname",
+      "type": "text",
+      "placeholder": "Last name?"
     },
     {
-      "label" : "Email?",
-      "id" : "register-email",
-      "required" : true,
-      "type" : "email",
-      "placeholder" : "Email?"
+      "label": "Email?",
+      "id": "register-email",
+      "required": true,
+      "type": "email",
+      "placeholder": "Email?"
     },
     {
       "label": "Password:",
-      "id" : "register-password",
-      "required" : true,
-      "type" : "password",
-      "placeholder" : "Password?",
-      "desc" : "Password must be 8 characters or more and contain a uppercase, lowercase, special character (|!@#$&*?^~) and number.",
-      "confirmInput" : true,
-      "strengthIndicator" : true,
-      "formType" : "register"
+      "id": "register-password",
+      "required": true,
+      "type": "password",
+      "placeholder": "Password?",
+      "desc": "Password must be 8 characters or more and contain a uppercase, lowercase, special character (|!@#$&*?^~) and number.",
+      "confirmInput": true,
+      "strengthIndicator": true,
+      "formType": "register"
     }
   ]
 }
