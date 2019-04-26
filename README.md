@@ -4,7 +4,7 @@
 A [VueJS](https://vuejs.org) powered WordPress theme. 
 
 ## Current Features:
-* Simple & lightweight custom built slider.
+* Simple & lightweight custom built Post carousel with snapping.
 * Custom Login/regsitration.
 * Full state management for all routes and images, using https://vuex.vuejs.org/.
 * Custom load more.
